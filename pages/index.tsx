@@ -1,4 +1,8 @@
-// import Link from "next/link";
+import Link from "next/link";
+import { useState } from "react";
+
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -9,18 +13,17 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useState } from "react";
+
 
 
 const Home = () => {
 
-  // const [playGame, setPlayGame] = useState(null); // im planning to make this a boolean. but i want the initial value to be null. how?
   const [playMusic, setPlayMusic] = useState(false);
   const [playGame, setPlayGame] = useState<boolean | null>(null); // Initialize as null, can be boolean later
   const [playerName, setPlayerName] = useState("");
   const [seePlayerGoal, setSeePlayerGoal] = useState(false);
+  const [playerInitialKM, setPlayerInitialKM] = useState(0);
+  const [seePlayerIntroDashboard, setSeePlayerIntroDashboard] = useState(false);
 
   const handlePlayMusic = () => {
     setPlayMusic(true);
@@ -45,7 +48,10 @@ const Home = () => {
           </DialogTrigger>
           <DialogContent className="max-w-[90vw] lg:max-w-md rounded-lg bg-black text-white p-4">
             <DialogHeader>
-              <DialogTitle className="py-4">{(playGame === null || playGame === true) && " New Player"}</DialogTitle>
+              <DialogTitle className="py-4">
+                {((playGame === null || playGame === true) && seePlayerIntroDashboard === false) && " New Player"}
+                {seePlayerIntroDashboard && "Initialization Complete"}
+              </DialogTitle>
               <DialogDescription className="text-white/80 mt-8">
               {playGame === null ? (
                 <div>
@@ -62,23 +68,38 @@ const Home = () => {
                         </Label>
                         <Input id="name" placeholder="Sung Jinwoo" className="col-span-3" onChange={(e)=>{setPlayerName(e.target.value)}} />
                       </div>
-                      <Button onClick={()=>setSeePlayerGoal(true)} disabled={!playerName} className="disabled:bg-gray-800 bg-blue-600 hover:bg-blue-700 font-bold">Save</Button>
+                      <Button onClick={()=>setSeePlayerGoal(true)} disabled={playerName.length < 3} className="disabled:bg-gray-800 bg-blue-600 hover:bg-blue-700 font-bold">Save</Button>
                     </div>
                   ) : ( 
-                    <div className="flex flex-col gap-4">
-                      <p>To proceed, please enter your name to begin your journey. Note that this action is irreversible.</p>
-                      <div className="flex flex-col items-center gap-4 py-4">
-                        <Label htmlFor="name" className="self-start -mb-3">
-                          Goal <span className="text-red-500">*</span>
-                        </Label>
-                        <Input id="name" placeholder="Sung Jinwoo" className="col-span-3" onChange={(e)=>{setPlayerName(e.target.value)}} />
+                    !seePlayerIntroDashboard ? (
+                      <div className="flex flex-col gap-4">
+                        <p>Set your starting level: How many kilometers can you comfortably run?</p>
+                        <div className="flex justify-center items-center">
+                          <div className="flex flex-col justify-center items-center gap-1 bg-zinc-900 p-4 aspect-square rounded-lg min-w-[108.6px]">
+                            <span className="font-bold text-5xl">{playerInitialKM}</span>
+                            <span className="text-xs font-medium">km</span>
+                          </div>
+                        </div>
+                        <Input type="range" min="0" max="10" step="1" value={playerInitialKM} onChange={(e)=>setPlayerInitialKM(Number(e.target.value))}/>
+                        <Button onClick={()=>{setSeePlayerIntroDashboard(true)}} disabled={playerInitialKM === 0} className="disabled:bg-gray-800 bg-blue-600 hover:bg-blue-700 font-bold">Save</Button>
                       </div>
-                      <Button onClick={()=>setSeePlayerGoal(true)} disabled={!playerName} className="disabled:bg-gray-800 bg-blue-600 hover:bg-blue-700 font-bold">Save</Button>
-                    </div>
+                    ) : ( 
+                      <div className="flex flex-col gap-4">
+                        <p>Your profile is ready. Begin your daily quests and rise through the ranks. Your starting rank is:</p>
+                        <div className="flex justify-center items-center rotate-45 py-4">
+                          <span className="bg-zinc-800 w-12 h-12 flex justify-center items-center"><span className="-rotate-45 font-bold text-xl">E</span></span>
+                        </div>
+                        <p className="text-red-500 text-xs">Note that if you miss a day, you will receive a severe penalty.</p>
+                        <Link href={"/dashboard"}><Button className="disabled:bg-gray-800 bg-blue-600 hover:bg-blue-700 font-bold mt-4">Begin Day 1</Button></Link>
+                      </div>
+                    )
                   )}
                 </div>
               ) : (
-                <div className="font-bold text-4xl pb-8">GAME OVER</div>
+                <div className="pb-8 flex flex-col gap-4">
+                  <p className="font-bold text-4xl">GAME OVER</p>
+                  <span className="text-xs">There are no redos in life.<br/> You have been eliminated by the system.</span>
+                </div>
               )}
               </DialogDescription>
             </DialogHeader>
