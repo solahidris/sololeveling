@@ -9,17 +9,18 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-// import { Input } from "@/components/ui/input";
-// import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useState } from "react";
 
 
 const Home = () => {
 
   // const [playGame, setPlayGame] = useState(null); // im planning to make this a boolean. but i want the initial value to be null. how?
-  const [playGame, setPlayGame] = useState<boolean | null>(null); // Initialize as null, can be boolean later
-  // const [playerName, setPlayerName] = useState("");
   const [playMusic, setPlayMusic] = useState(false);
+  const [playGame, setPlayGame] = useState<boolean | null>(null); // Initialize as null, can be boolean later
+  const [playerName, setPlayerName] = useState("");
+  const [seePlayerGoal, setSeePlayerGoal] = useState(false);
 
   const handlePlayMusic = () => {
     setPlayMusic(true);
@@ -44,13 +45,41 @@ const Home = () => {
           </DialogTrigger>
           <DialogContent className="max-w-[90vw] lg:max-w-md rounded-lg bg-black text-white p-4">
             <DialogHeader>
-              <DialogTitle className="py-4">{playGame === null && " New Player"}</DialogTitle>
+              <DialogTitle className="py-4">{(playGame === null || playGame === true) && " New Player"}</DialogTitle>
               <DialogDescription className="text-white/80 mt-8">
-                {playGame === null ? 
-                  <div>You have acquired the qualifications to be a <span className="font-bold text-white">Player</span>. Your fitness goals will die in the abyst if you choose not to accept.  <span className="font-bold text-white">Will you accept?</span></div>
-                : 
-                  <div className="font-bold text-4xl pb-8">GAME OVER</div>
-                }
+              {playGame === null ? (
+                <div>
+                  You have acquired the qualifications to be a <span className="font-bold text-white">Player</span>. Your fitness goals will die in the abyss if you choose not to accept. <span className="font-bold text-white">Will you accept?</span>
+                </div>
+              ) : playGame === true ? (
+                <div>
+                  {!seePlayerGoal ? (
+                    <div className="flex flex-col gap-4">
+                      <p>To proceed, please enter your name to begin your journey. Note that this action is irreversible.</p>
+                      <div className="flex flex-col items-center gap-4 py-4">
+                        <Label htmlFor="name" className="self-start -mb-3">
+                          Name <span className="text-red-500">*</span>
+                        </Label>
+                        <Input id="name" placeholder="Sung Jinwoo" className="col-span-3" onChange={(e)=>{setPlayerName(e.target.value)}} />
+                      </div>
+                      <Button onClick={()=>setSeePlayerGoal(true)} disabled={!playerName} className="disabled:bg-gray-800 bg-blue-600 hover:bg-blue-700 font-bold">Save</Button>
+                    </div>
+                  ) : ( 
+                    <div className="flex flex-col gap-4">
+                      <p>To proceed, please enter your name to begin your journey. Note that this action is irreversible.</p>
+                      <div className="flex flex-col items-center gap-4 py-4">
+                        <Label htmlFor="name" className="self-start -mb-3">
+                          Goal <span className="text-red-500">*</span>
+                        </Label>
+                        <Input id="name" placeholder="Sung Jinwoo" className="col-span-3" onChange={(e)=>{setPlayerName(e.target.value)}} />
+                      </div>
+                      <Button onClick={()=>setSeePlayerGoal(true)} disabled={!playerName} className="disabled:bg-gray-800 bg-blue-600 hover:bg-blue-700 font-bold">Save</Button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="font-bold text-4xl pb-8">GAME OVER</div>
+              )}
               </DialogDescription>
             </DialogHeader>
             {playGame === null &&
