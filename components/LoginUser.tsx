@@ -41,10 +41,22 @@ const LoginUser = () => {
     <div>
       <form onSubmit={handleAuth} className="flex flex-col gap-1">
         <div className='grid grid-cols-2 gap-1 borders p-1 rounded-lg bg-white/15 -mt-['>
-          <Button onClick={() => setIsSignUp(!isSignUp)} className={`transition duration-300 ${isSignUp ? "" : "bg-blue-600 hover:bg-blue-700"}`}>
+          {/* <Button onClick={() => setIsSignUp(!isSignUp)} className={`transition duration-300 ${isSignUp ? "" : "bg-blue-600 hover:bg-blue-700"}`}>
             {isSignUp ? 'Switch to Login' : 'Login'}
           </Button>
           <Button onClick={() => setIsSignUp(!isSignUp)} className={`transition duration-300 ${isSignUp ? "bg-blue-600 hover:bg-blue-700" : ""}`}>
+            {!isSignUp ? 'Switch to Sign Up' : 'Sign Up'}
+          </Button> */}
+          <Button onClick={() => {
+            console.log('Switch button clicked'); // Debugging log
+            setIsSignUp(!isSignUp);
+          }} className={`transition duration-300 ${isSignUp ? "" : "bg-blue-600 hover:bg-blue-700"}`}>
+            {isSignUp ? 'Switch to Login' : 'Login'}
+          </Button>
+          <Button onClick={() => {
+            console.log('Switch button clicked'); // Debugging log
+            setIsSignUp(!isSignUp);
+          }} className={`transition duration-300 ${isSignUp ? "bg-blue-600 hover:bg-blue-700" : ""}`}>
             {!isSignUp ? 'Switch to Sign Up' : 'Sign Up'}
           </Button>
         </div>
@@ -63,7 +75,7 @@ const LoginUser = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <Button type="submit" disabled={loading} className='my-4 bg-blue-700 hover:bg-blue-800'>
+        <Button type="submit" disabled={loading || !password || !email} className='my-4 bg-blue-700 hover:bg-blue-800'>
           {loading ? (isSignUp ? 'Signing up...' : 'Logging in...') : (isSignUp ? 'Sign Up' : 'Login')}
         </Button>
       </form>

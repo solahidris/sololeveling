@@ -40,6 +40,7 @@ const Home = () => {
     } else {
       setPlayerRank("D")
     }
+  // },[playerInitialKM])
   },[playerInitialKM, setPlayerRank])
 
   return (
@@ -127,9 +128,7 @@ const Home = () => {
             <Button onClick={handlePlayMusic}className="w-full max-w-[200px] font-bold">Login</Button>
           </DialogTrigger>
           <DialogContent className="max-w-[90vw] lg:max-w-md rounded-lg bg-black text-white p-4">
-            <DialogHeader>
               <LoginUser />
-            </DialogHeader>
           </DialogContent>
         </Dialog>
 
