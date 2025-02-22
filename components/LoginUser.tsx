@@ -11,6 +11,7 @@ const LoginUser = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
+  const [submitLoginSignUp, setSubmitLoginSignUp] = useState(false);
   const router = useRouter();
 
   const handleAuth = async (e: React.FormEvent) => {
@@ -48,13 +49,13 @@ const LoginUser = () => {
             {!isSignUp ? 'Switch to Sign Up' : 'Sign Up'}
           </Button> */}
           <Button onClick={() => {
-            console.log('Switch button clicked'); // Debugging log
+            console.log('Login Switch button clicked'); // Debugging log
             setIsSignUp(!isSignUp);
           }} className={`transition duration-300 ${isSignUp ? "" : "bg-blue-600 hover:bg-blue-700"}`}>
             {isSignUp ? 'Switch to Login' : 'Login'}
           </Button>
           <Button onClick={() => {
-            console.log('Switch button clicked'); // Debugging log
+            console.log('SignUp Switch button clicked'); // Debugging log
             setIsSignUp(!isSignUp);
           }} className={`transition duration-300 ${isSignUp ? "bg-blue-600 hover:bg-blue-700" : ""}`}>
             {!isSignUp ? 'Switch to Sign Up' : 'Sign Up'}
@@ -75,14 +76,12 @@ const LoginUser = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <Button type="submit" disabled={loading || !password || !email} className='my-4 bg-blue-700 hover:bg-blue-800'>
+        <Button onClick={()=>{setSubmitLoginSignUp(true)}} type="submit" disabled={loading || !password || !email || !submitLoginSignUp} className='my-4 bg-blue-700 hover:bg-blue-800'>
           {loading ? (isSignUp ? 'Signing up...' : 'Logging in...') : (isSignUp ? 'Sign Up' : 'Login')}
         </Button>
       </form>
       {error && <p>{error}</p>}
-      {/* <Button onClick={() => setIsSignUp(!isSignUp)}>
-        {isSignUp ? 'Switch to Login' : 'Switch to Sign Up'}
-      </Button> */}
+      
     </div>
   );
 };
