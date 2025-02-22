@@ -6,7 +6,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  // DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -15,13 +14,13 @@ import {
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePlayer } from "@/context/PlayerContext";
+import LoginUser from "@/components/LoginUser";
 
 
 const Home = () => {
 
   const [playMusic, setPlayMusic] = useState(false);
   const [playGame, setPlayGame] = useState<boolean | null>(null); // Initialize as null, can be boolean later
-  // const [playerName, setPlayerName] = useState("");
   const { playerName, setPlayerName } = usePlayer(); // Use the context
   const { playerRank, setPlayerRank } = usePlayer(); // Use the context
   const [seePlayerGoal, setSeePlayerGoal] = useState(false);
@@ -41,7 +40,7 @@ const Home = () => {
     } else {
       setPlayerRank("D")
     }
-  },[playerInitialKM])
+  },[playerInitialKM, setPlayerRank])
 
   return (
     <div className="flex flex-col justify-center items-center min-h-[100vh] bg-gradient-to-tr from-gray-800 via-gray-500 to-gray-800 bg-opacity-[10%]">
@@ -120,26 +119,20 @@ const Home = () => {
                   <Button onClick={()=>setPlayGame(false)} className="bg-red-700 hover:bg-red-800 font-bold">No</Button>
               </div>
             }
-            {/* <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="name" className="text-right">
-                  Name
-                </Label>
-                <Input id="name" value="Pedro Duarte" className="col-span-3" />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="username" className="text-right">
-                  Username
-                </Label>
-                <Input id="username" value="@peduarte" className="col-span-3" />
-              </div>
-            </div> */}
-            {/* <DialogFooter>
-              <Button type="submit">Save changes</Button>
-            </DialogFooter> */}
           </DialogContent>
         </Dialog>
-      {/* </Link> */}
+          <p className="text-white/70 font-semibold text-xs tracking-widest py-1.5">or</p>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button onClick={handlePlayMusic}className="w-full max-w-[200px] font-bold">Login</Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-[90vw] lg:max-w-md rounded-lg bg-black text-white p-4">
+            <DialogHeader>
+              <LoginUser />
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
+
     </div>
   );
 };
