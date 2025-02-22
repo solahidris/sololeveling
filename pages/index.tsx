@@ -44,7 +44,7 @@ const Home = () => {
   },[playerInitialKM])
 
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen bg-gradient-to-tr from-gray-800 via-gray-500 to-gray-800 bg-opacity-[10%]">
+    <div className="flex flex-col justify-center items-center min-h-[100vh] bg-gradient-to-tr from-gray-800 via-gray-500 to-gray-800 bg-opacity-[10%]">
       <img
         src="./images/main.png"
         alt="mainimage"
@@ -52,9 +52,10 @@ const Home = () => {
         height={400}
         className="h-full w-full max-w-[200px] rounded-lg drop-shadow-md"
       />
+
         <Dialog>
           <DialogTrigger asChild>
-            <Button onClick={handlePlayMusic}className="w-full max-w-[200px] mt-4 font-bold">Start Quest</Button>
+            <Button onClick={handlePlayMusic}className="w-full max-w-[200px] mt-4 font-bold">Start New Quest</Button>
           </DialogTrigger>
           <DialogContent className="max-w-[90vw] lg:max-w-md rounded-lg bg-black text-white p-4">
             <DialogHeader>

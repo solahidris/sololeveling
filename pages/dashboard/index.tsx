@@ -98,7 +98,7 @@ const DashboardPage = () => {
           </div>
         </div>
 
-        <div className="flex flex-col gap-4 my-4 border border-white rounded-lg bg-black p-4 w-[90vw] lg:max-w-sm relative">
+        <div className="flex flex-col gap-4 my-4 shadow-md shadow-white/10 rounded-lg bg-black p-4 w-[90vw] lg:max-w-sm relative">
           <p className={`text-xl font-extrabold text-center tracking-wider uppercase bg-gradient-to-r bg-clip-text text-transparent ${todaysWorkoutComleted ? "from-green-800 via-green-500 to-green-800" : "from-red-800 via-red-500 to-red-800"}`}>
             Today&apos;s Task
           </p>
@@ -118,7 +118,7 @@ const DashboardPage = () => {
           <Button onClick={handleSubmitTodaysWorkout} disabled={todaysWorkoutComleted} className={`${todaysWorkoutComleted ? "bg-zinc-700 hover:bg-zinc-600 text-white" : "bg-blue-700 hover:bg-blue-800"} font-bold`}>{todaysWorkoutComleted ? "Completed" : "Set as Complete"}</Button>
         </div>
 
-        <div className="flex flex-col gap-4 my-4 border border-white/20 rounded-lg bg-black p-4 w-[90vw] lg:max-w-sm relative mb-16">
+        <div className="flex flex-col gap-4 my-4 shadow-md shadow-white/10 rounded-lg bg-black p-4 w-[90vw] lg:max-w-sm relative mb-16">
           <p className="font-bold text-center">Workout History</p>
           <Table>
             <TableCaption className="text-[10px] tracking-wider">A list of your all your accumulated hard work.</TableCaption>
@@ -133,7 +133,7 @@ const DashboardPage = () => {
             </TableHeader>
             <TableBody>
               {workoutLogs.map((workout) => (
-                <TableRow key={workout.id} className="text-[10px] text-white/50 tracking-wider" style={{ borderColor: "#FFFFFF30" }}>
+                <TableRow key={workout.id} className="text-xs text-white/50 tracking-wide" style={{ borderColor: "#FFFFFF30" }}>
                   <TableCell className="font-medium p-2 h-10">
                     {new Date(workout.date).toLocaleDateString(undefined, {
                       day: '2-digit',
@@ -148,7 +148,7 @@ const DashboardPage = () => {
               ))}
             </TableBody>
             <TableFooter style={{ borderColor: "#000000" }}>
-              <TableRow className="text-[10px] bg-black/[70%] tracking-wider">
+              <TableRow className="text-xs bg-black/[70%] tracking-wide">
                 <TableCell className="font-medium p-2 h-10 font-semibold" style={{ borderColor: "#FFFFFF30" }}>Total</TableCell>
                 <TableCell className="font-medium p-2 h-10 font-semibold">{workoutLogs.reduce((total, log) => total + log.pushup, 0)}</TableCell>
                 <TableCell className="font-medium p-2 h-10 font-semibold">{workoutLogs.reduce((total, log) => total + log.situp, 0)}</TableCell>
@@ -159,9 +159,9 @@ const DashboardPage = () => {
           </Table>
         </div>
 
-        <div className="fixed bottom-0 h-12 grid grid-cols-2 w-full text-xs tracking-wide font-medium">
-          <button className="bg-zinc-800/60 font-bold uppercase w-full flex justify-center items-center border-r border-white/10 gap-1"><FaRegStar /><p>Ranking</p></button>
-          <button className="bg-zinc-800/60 font-bold uppercase w-full flex justify-center items-center border-r border-white/10 gap-1"><CgProfile /><p>Profile</p></button>
+        <div className="fixed bottom-0 h-12 grid grid-cols-2 w-full text-xs tracking-wide font-medium shadow-[0_-15px_15px_rgba(0,0,0,0.10)] lg:shadow-md shadow-zinc-700/30">
+          <button className="bg-gradient-to-t from-zinc-900 via-zinc-900 to-zinc-800 font-bold uppercase w-full flex justify-center items-center border-r border-white/5 gap-1"><FaRegStar /><p>Ranking</p></button>
+          <button className="bg-gradient-to-t from-zinc-900 via-zinc-900 to-zinc-800 font-bold uppercase w-full flex justify-center items-center border-l border-white/5 gap-1"><CgProfile /><p>Profile</p></button>
         </div>
 
       </div>
