@@ -11,7 +11,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePlayer } from "@/context/PlayerContext";
 import LoginUser from "@/components/LoginUser";
@@ -26,12 +25,17 @@ const Home = () => {
   const [seePlayerGoal, setSeePlayerGoal] = useState(false);
   const [playerInitialKM, setPlayerInitialKM] = useState(0);
   const [seePlayerIntroDashboard, setSeePlayerIntroDashboard] = useState(false);
+  const [seePlayerSignUp, setSeePlayerSignUp] = useState(false);
 
   const handlePlayMusic = () => {
-    setPlayMusic(true);
-    console.log("music played:", !playMusic);
-    const audio = new Audio("./audio/dark_aria.mp3");
-    audio.play();
+    if (playMusic) {
+      console.log("music already played");
+    } else {
+      setPlayMusic(true);
+      console.log("set play music true:: ", !playMusic);
+      const audio = new Audio("./audio/dark_aria.mp3");
+      audio.play();
+    }
   }
 
   useEffect(() => {
@@ -55,13 +59,13 @@ const Home = () => {
 
         <Dialog>
           <DialogTrigger asChild>
-            <Button onClick={handlePlayMusic}className="w-full max-w-[200px] mt-4 font-bold">Start New Quest</Button>
+            <Button onClick={handlePlayMusic} className="w-full max-w-[200px] mt-4 font-bold">Start New Quest</Button>
           </DialogTrigger>
           <DialogContent className="max-w-[90vw] lg:max-w-md rounded-lg bg-black text-white p-4">
             <DialogHeader>
               <DialogTitle className="py-4 text-center">
                 {((playGame === null || playGame === true) && seePlayerIntroDashboard === false) && " New Player"}
-                {seePlayerIntroDashboard && "Initialization Complete"}
+                {seePlayerIntroDashboard && !seePlayerSignUp && "Initialization Complete"}
               </DialogTitle>
               <DialogDescription className="text-white/80 mt-8">
               {playGame === null ? (
@@ -95,14 +99,20 @@ const Home = () => {
                         <Button onClick={()=>{setSeePlayerIntroDashboard(true)}} disabled={playerInitialKM === 0} className="disabled:bg-gray-800 bg-blue-700 hover:bg-blue-800 font-bold">Save</Button>
                       </div>
                     ) : ( 
-                      <div className="flex flex-col gap-4">
-                        <p className="text-center">Your profile is ready. Begin your daily quests and rise through the ranks. Your starting rank is:</p>
-                        <div className="flex justify-center items-center rotate-45 py-4">
-                          <span className="bg-zinc-800 w-12 h-12 flex justify-center items-center"><span className="-rotate-45 font-bold text-xl capitalize">{playerRank}</span></span>
+                      !seePlayerSignUp ? (
+                        <div className="flex flex-col gap-4">
+                          <p className="text-center">Your profile is ready. Begin your daily quests and rise through the ranks. Your starting rank is:</p>
+                          <div className="flex justify-center items-center rotate-45 py-4">
+                            <span className="bg-zinc-800 w-12 h-12 flex justify-center items-center"><span className="-rotate-45 font-bold text-xl capitalize">{playerRank}</span></span>
+                          </div>
+                          <p className="text-red-500 text-xs text-center">Note that if you miss a day,<br/>you will receive a severe penalty.</p>
+                          <Button onClick={()=>setSeePlayerSignUp(true)} className="disabled:bg-gray-800 bg-blue-700 hover:bg-blue-800 font-bold mt-4 w-full">Sign Up Profile</Button>
                         </div>
-                        <p className="text-red-500 text-xs text-center">Note that if you miss a day,<br/>you will receive a severe penalty.</p>
-                        <Link href={"/dashboard"}><Button className="disabled:bg-gray-800 bg-blue-700 hover:bg-blue-800 font-bold mt-4 w-full">Begin Day 1</Button></Link>
-                      </div>
+                      ) : (
+                        <div className="flex flex-col gap-4">
+                          <LoginUser isSignUp={true} playerName={playerName} playerRank={playerRank} />
+                        </div>
+                      )
                     )
                   )}
                 </div>
@@ -125,10 +135,10 @@ const Home = () => {
           <p className="text-white/70 font-semibold text-xs tracking-widest py-1.5">or</p>
         <Dialog>
           <DialogTrigger asChild>
-            <Button onClick={handlePlayMusic}className="w-full max-w-[200px] font-bold">Login</Button>
+            <Button onClick={handlePlayMusic} className="w-full max-w-[200px] font-bold">Login</Button>
           </DialogTrigger>
           <DialogContent className="max-w-[90vw] lg:max-w-md rounded-lg bg-black text-white p-4">
-              <LoginUser />
+              <LoginUser isSignUp={false} />
           </DialogContent>
         </Dialog>
 

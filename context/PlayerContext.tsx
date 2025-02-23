@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { supabase } from '@/lib/supabaseClient';
 
 // Define the shape of the context
-interface WorkoutLog {
+export interface WorkoutLog {
   id: number;
   date: Date;
   pushup: number;
@@ -10,13 +11,20 @@ interface WorkoutLog {
   run: number;
 }
 
-interface PlayerContextType {
+export interface PlayerContextType {
   playerName: string;
   setPlayerName: (name: string) => void;
   playerRank: string;
   setPlayerRank: (rank: string) => void;
+  playerExp: number;
+  setPlayerExp: (exp: number) => void;
+  playerDayStreak: number;
+  setPlayerDayStreak: (streak: number) => void;
+  email: string;
+  setEmail: (email: string) => void;
   workoutLogs: WorkoutLog[];
   addWorkoutLog: (log: WorkoutLog) => void;
+  logout: () => void;
 }
 
 // Create the context with default values
@@ -27,42 +35,62 @@ export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   const [playerName, setPlayerName] = useState("");
   const [playerRank, setPlayerRank] = useState("");
   const [workoutLogs, setWorkoutLogs] = useState<WorkoutLog[]>([]);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const storedPlayerName = localStorage.getItem('playerName');
-      const storedPlayerRank = localStorage.getItem('playerRank');
-      const storedLogs = localStorage.getItem('workoutLogs');
-      if (storedPlayerName) setPlayerName(storedPlayerName);
-      if (storedPlayerRank) setPlayerRank(storedPlayerRank);
-      if (storedLogs) setWorkoutLogs(JSON.parse(storedLogs));
-    }
-  }, []);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem('playerName', playerName);
-    }
-  }, [playerName]);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem('playerRank', playerRank);
-    }
-  }, [playerRank]);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem('workoutLogs', JSON.stringify(workoutLogs));
-    }
-  }, [workoutLogs]);
+  const [playerExp, setPlayerExp] = useState(0);
+  const [playerDayStreak, setPlayerDayStreak] = useState(0);
+  const [email, setEmail] = useState("");
 
   const addWorkoutLog = (log: WorkoutLog) => {
     setWorkoutLogs((prevLogs) => [...prevLogs, log]);
   };
 
+  useEffect(() => {
+    const checkSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        const { data: userData, error } = await supabase
+          .from('users')
+          .select('*')
+          .eq('email', session.user.email)
+          .single();
+
+        if (!error && userData) {
+          setPlayerName(userData.playerName);
+          setPlayerRank(userData.playerRank);
+          setPlayerExp(userData.playerExp);
+          setPlayerDayStreak(userData.playerDayStreak);
+          setEmail(userData.email);
+        }
+      }
+    };
+
+    checkSession();
+  }, []);
+
+  const logout = async () => {
+    await supabase.auth.signOut();
+    setPlayerName('');
+    setPlayerRank('');
+    setPlayerExp(0);
+    setPlayerDayStreak(0);
+    setEmail('');
+  };
+
   return (
-    <PlayerContext.Provider value={{ playerName, setPlayerName, playerRank, setPlayerRank, workoutLogs, addWorkoutLog }}>
+    <PlayerContext.Provider value={{
+      playerName,
+      setPlayerName,
+      playerRank,
+      setPlayerRank,
+      workoutLogs,
+      addWorkoutLog,
+      playerExp,
+      setPlayerExp,
+      playerDayStreak,
+      setPlayerDayStreak,
+      email,
+      setEmail,
+      logout
+    }}>
       {children}
     </PlayerContext.Provider>
   );

@@ -1,5 +1,8 @@
 import { Button } from "@/components/ui/button";
-import { usePlayer } from "@/context/PlayerContext";
+
+import { usePlayer } from '@/context/PlayerContext';
+import { supabase } from '@/lib/supabaseClient';
+
 import { calculateTimeLeftTillEndOfDay } from "@/functions/calculateTimeLeftTillEndOfDay";
 import { formatCurrentTime } from "@/functions/formatCurrentTime";
 import { getWorkoutCounts } from "@/functions/getWorkoutCounts";
@@ -17,11 +20,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useRouter } from "next/router";
  
 
-const DashboardPage = () => {
+const ProfilePage = () => {
 
-  const { playerName, playerRank, workoutLogs, addWorkoutLog } = usePlayer(); 
+  const { email, playerName, playerRank, playerExp, playerDayStreak, setPlayerExp, setPlayerDayStreak, workoutLogs, addWorkoutLog, logout } = usePlayer();
+
   const [workoutPushupCount, setWorkoutPushupCount] = useState(1);
   const [workoutSitupsCount, setWorkoutSitupsCount] = useState(1);
   const [workoutSquatsCount, setWorkoutSquatsCount] = useState(1);
@@ -43,6 +48,7 @@ const DashboardPage = () => {
     const intervalId = setInterval(() => { setTimeNow(new Date()); }, 60000); // Update every minute
     return () => clearInterval(intervalId); // Cleanup interval on component unmount
   }, []);
+  
 
   useEffect(() => {
     const today = new Date();
@@ -57,33 +63,112 @@ const DashboardPage = () => {
     setTodaysWorkoutComleted(isTodayCompleted);
   }, [workoutLogs]);
 
-  const handleSubmitTodaysWorkout = () => {
+  const handleSubmitTodaysWorkout = async () => {
+    const today = new Date();
+    const isTodayCompleted = workoutLogs.some(log => {
+      const logDate = new Date(log.date);
+      return (
+        logDate.getDate() === today.getDate() &&
+        logDate.getMonth() === today.getMonth() &&
+        logDate.getFullYear() === today.getFullYear()
+      );
+    });
+  
+    if (isTodayCompleted) {
+      console.log('Workout for today is already completed.');
+      return; // Exit the function if today's workout is already logged
+    }
+  
     setTodaysWorkoutComleted(true);
+  
     const newLog = {
-      id: Date.now(), // Use timestamp for unique ID
-      date: new Date(),
+      id: Date.now(), // Ensure unique ID by using current timestamp
+      date: today,
       pushup: workoutPushupCount,
       situp: workoutSitupsCount,
       squats: workoutSquatsCount,
       run: workoutRunCount,
     };
+  
+    // Add the new workout log to the local state
     addWorkoutLog(newLog);
+  
+    // Calculate new player experience using the updated workoutLogs
+    const updatedWorkoutLogs = [...workoutLogs, newLog];
+    const newExp = parseFloat((updatedWorkoutLogs.length * Math.PI * 100).toFixed(0));
+    setPlayerExp(newExp);
+  
+    // Calculate the day streak
+    const sortedLogs = updatedWorkoutLogs.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    let streak = 0;
+    let currentStreak = 0;
+    let lastDate: Date | null = null; // Explicitly define the type
+  
+    sortedLogs.forEach(log => {
+      const logDate = new Date(log.date);
+      if (lastDate) {
+        const isConsecutiveDay =
+          logDate.getDate() === lastDate.getDate() + 1 &&
+          logDate.getMonth() === lastDate.getMonth() &&
+          logDate.getFullYear() === lastDate.getFullYear();
+  
+        if (isConsecutiveDay) {
+          currentStreak++;
+        } else if (logDate > lastDate) {
+          currentStreak = 1;
+        }
+      } else {
+        currentStreak = 1; // Initialize streak for the first log
+      }
+      lastDate = logDate;
+      streak = Math.max(streak, currentStreak);
+    });
+  
+    setPlayerDayStreak(streak);
+  
+    console.log("Updating Supabase with newExp:", newExp, "and updatedWorkoutLogs:", updatedWorkoutLogs);
+  
+    // Update the user's playerExp, workoutLogs, and playerDayStreak in the database
+    const { error } = await supabase
+      .from('users')
+      .update({
+        playerExp: newExp,
+        workoutLogs: updatedWorkoutLogs, // Assuming workoutLogs is stored as a JSON array
+        playerDayStreak: streak
+      })
+      .eq('email', email); // Use the user's email to identify the record
+  
+    if (error) {
+      console.error('Error updating user data:', error.message);
+    } else {
+      console.log('User data updated successfully in Supabase');
+    }
   };
+
+  const router = useRouter();
+
+  const handleLogOut = () => {
+    logout();
+    router.push("/");
+  }
 
   return (
     <div className="flex flex-col items-center p-6 min-h-screen bg-gradient-to-tr from-gray-800 via-gray-500 to-gray-800 relative">
       {/* Background Overlay Dark Screen */}
       <div className="h-full w-full bg-black/80 absolute top-0 left-0 z-0"/>
+      {/* Logout Buttton */}
+      <button onClick={handleLogOut} className="absolute top-2 left-2 z-10 bg-white/10z-10 text-xs text-red-600 tracking-wider font-semibold ">Logout</button>
+
 
       <div className="z-10 text-white flex flex-col items-center">
-        <p className="absolute top-2 right-2 tracking-wide text-xs">{formatCurrentTime(timeNow)}</p>
+        <p className="absolute top-2 right-2 tracking-wide text-xs font-semibold">{formatCurrentTime(timeNow)}</p>
         <p className="text-center pb-6 font-bold uppercase tracking-widest">Profile</p>
         <img src="./images/noob.png" alt="profile_pic" width={100} height={100} className="rounded-full h-[120px] w-[120px]"/>
         <p className="font-semibold capitalize pt-2 pb-4">{playerName}</p>
         <div className="flex gap-3 justify-center items-center uppercase">
           <div className="flex flex-col from-zinc-800 via-zinc-800 bg-gradient-to-b p-3 justify-center items-center drop-shadow-md rounded w-14 h-14 aspect-square">
             <p className="font-bold tracking-widest text-[8px]">Exp</p>
-            <p className="text-sm font-semibold">{(workoutLogs.length * Math.PI * 100).toLocaleString(undefined, { maximumFractionDigits: 0 })}</p>
+            <p className="text-sm font-semibold">{playerExp}</p>
           </div>
           <div className={`flex flex-col p-3 justify-center items-center drop-shadow-md rounded w-16 h-16 aspect-square bg-gradient-to-b
             ${playerRank === "E" ? "from-red-600" : (playerRank === "D" ? "from-amber-600" : (playerRank === "C" ? "from-yellow-600" : (playerRank === "B" ? "from-blue-600" : (playerRank === "A" ? "from-green-600" : "from-purple-600" )))) }
@@ -94,7 +179,7 @@ const DashboardPage = () => {
           </div>
           <div className="flex flex-col from-zinc-800 via-zinc-800 bg-gradient-to-b p-3 justify-center items-center drop-shadow-md rounded w-14 h-14 aspect-square">
             <p className="font-bold tracking-widest text-[8px]">Days</p>
-            <p className="text-sm font-semibold">{(workoutLogs.length)}</p>
+            <p className="text-sm font-semibold">{playerDayStreak}</p>
           </div>
         </div>
 
@@ -150,10 +235,10 @@ const DashboardPage = () => {
             <TableFooter style={{ borderColor: "#000000" }}>
               <TableRow className="text-xs bg-black/[70%] tracking-wide">
                 <TableCell className="font-medium p-2 h-10 font-semibold" style={{ borderColor: "#FFFFFF30" }}>Total</TableCell>
-                <TableCell className="font-medium p-2 h-10 font-semibold">{workoutLogs.reduce((total, log) => total + log.pushup, 0)}</TableCell>
-                <TableCell className="font-medium p-2 h-10 font-semibold">{workoutLogs.reduce((total, log) => total + log.situp, 0)}</TableCell>
-                <TableCell className="font-medium p-2 h-10 font-semibold">{workoutLogs.reduce((total, log) => total + log.squats, 0)}</TableCell>
-                <TableCell className="font-medium p-2 h-10 font-semibold">{workoutLogs.reduce((total, log) => total + log.run, 0)}</TableCell>
+                <TableCell className="font-medium p-2 h-10 font-semibold">{workoutLogs.reduce((total, log) => total + log.pushup, 0)}<span className="text-[10px] font-bold ml-0.5 opacity-50">x</span></TableCell>
+                <TableCell className="font-medium p-2 h-10 font-semibold">{workoutLogs.reduce((total, log) => total + log.situp, 0)}<span className="text-[10px] font-bold ml-0.5 opacity-50">x</span></TableCell>
+                <TableCell className="font-medium p-2 h-10 font-semibold">{workoutLogs.reduce((total, log) => total + log.squats, 0)}<span className="text-[10px] font-bold ml-0.5 opacity-50">x</span></TableCell>
+                <TableCell className="font-medium p-2 h-10 font-semibold">{workoutLogs.reduce((total, log) => total + log.run, 0)}<span className="text-[10px] font-bold ml-0.5 opacity-50">km</span></TableCell>
               </TableRow>
             </TableFooter>
           </Table>
@@ -170,4 +255,4 @@ const DashboardPage = () => {
   );
 };
 
-export default DashboardPage;
+export default ProfilePage;
