@@ -54,7 +54,7 @@ const Home = () => {
         alt="mainimage"
         width={400}
         height={400}
-        className="h-full w-full max-w-[200px] rounded-lg drop-shadow-md"
+        className="h-full w-full max-w-[200px] rounded-lg drop-shadow-md -mt-20"
       />
 
         <Dialog>
