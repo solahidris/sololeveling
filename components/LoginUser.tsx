@@ -5,7 +5,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { usePlayer } from '@/context/PlayerContext';
-import { WorkoutLog } from '@/context/PlayerContext';
+// import { WorkoutLog } from '@/context/PlayerContext';
 
 // Define the props type
 type LoginUserProps = {
@@ -22,7 +22,7 @@ const LoginUser = ({ isSignUp = false, playerName, playerRank }: LoginUserProps)
   // const [isSignUpState, setisSignUpState] = useState(isSignUp);
   const isSignUpState = isSignUp;
   const router = useRouter();
-  const { setPlayerName, setPlayerRank, setPlayerExp, setPlayerDayStreak, setEmail: setContextEmail, addWorkoutLog } = usePlayer();
+  const { setPlayerName, setPlayerRank, setPlayerExp, setPlayerDayStreak, setEmail: setContextEmail, setWorkoutLogs } = usePlayer();
 
   const handleAuth = async () => {
     setLoading(true);
@@ -57,11 +57,13 @@ const LoginUser = ({ isSignUp = false, playerName, playerRank }: LoginUserProps)
           setPlayerRank(userData.playerRank);
           setPlayerExp(userData.playerExp);
           setPlayerDayStreak(userData.playerDayStreak);
-          // Check if workoutLogs is not null or undefined
-          const logs = userData.workoutLogs || [];
-          (logs as WorkoutLog[]).forEach((log: WorkoutLog) => addWorkoutLog(log));
-
           setContextEmail(userData.email);
+          // I Think this was causing duplicated on login
+          // const logs = userData.workoutLogs || [];
+          // (logs as WorkoutLog[]).forEach((log: WorkoutLog) => addWorkoutLog(log));
+          // Directly set workout logs to avoid duplication
+          setWorkoutLogs(userData.workoutLogs || []);
+
 
           router.push('/profile');
         }

@@ -23,7 +23,7 @@ import { useRouter } from "next/router";
 import MenuNavigation from "@/components/MenuNavigation";
  
 
-const ProfilePage = () => {
+const RankingPage = () => {
 
   const { email, playerName, playerRank, playerExp, playerDayStreak, setPlayerExp, setPlayerDayStreak, workoutLogs, addWorkoutLog, logout } = usePlayer();
 
@@ -166,7 +166,7 @@ const ProfilePage = () => {
 
       <div className="z-10 text-white flex flex-col items-center">
         <p className="absolute top-2 right-2 tracking-wide text-xs font-semibold">{formatCurrentTime(timeNow)}</p>
-        <p className="text-center pb-6 font-bold uppercase tracking-widest">Profile</p>
+        <div className="bg-red-500 flex justify-center items-center my-6 py-3 px-6 bg-gradient-to-tr from-yellow-800 via-yellow-500 to-yellow-800 rounded-lg"><span className="font-bold uppercase tracking-widest ">Global Ranking</span></div>
         <img src="./images/noob.png" alt="profile_pic" width={100} height={100} className="rounded-full h-[120px] w-[120px]"/>
         <p className="font-semibold capitalize pt-2 pb-4">{playerName}</p>
         <div className="flex gap-3 justify-center items-center uppercase">
@@ -256,4 +256,4 @@ const ProfilePage = () => {
   );
 };
 
-export default ProfilePage;
+export default RankingPage;

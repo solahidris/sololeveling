@@ -23,6 +23,7 @@ export interface PlayerContextType {
   email: string;
   setEmail: (email: string) => void;
   workoutLogs: WorkoutLog[];
+  setWorkoutLogs: (logs: WorkoutLog[]) => void;
   addWorkoutLog: (log: WorkoutLog) => void;
   logout: () => void;
 }
@@ -53,13 +54,18 @@ export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) 
           .eq('email', session.user.email)
           .single();
 
-        if (!error && userData) {
-          setPlayerName(userData.playerName);
-          setPlayerRank(userData.playerRank);
-          setPlayerExp(userData.playerExp);
-          setPlayerDayStreak(userData.playerDayStreak);
-          setEmail(userData.email);
-        }
+          if (!error && userData) {
+            // console.log('Fetched user data:', userData); // Debugging line
+            setPlayerName(userData.playerName);
+            setPlayerRank(userData.playerRank);
+            setPlayerExp(userData.playerExp);
+            setPlayerDayStreak(userData.playerDayStreak);
+            setEmail(userData.email);
+             // Ensure workoutLogs are set
+            setWorkoutLogs(userData.workoutLogs || []);
+          } else {
+            console.error('Error fetching user data:', error); // Debugging line
+          }
       }
     };
 
@@ -82,6 +88,7 @@ export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       playerRank,
       setPlayerRank,
       workoutLogs,
+      setWorkoutLogs,
       addWorkoutLog,
       playerExp,
       setPlayerExp,
