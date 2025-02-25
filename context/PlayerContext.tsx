@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { supabase } from '@/lib/supabaseClient';
+import { formatTimestampToDate } from '@/functions/formatTimestampToDate';
 
 // Define the shape of the context
 export interface WorkoutLog {
@@ -16,6 +17,8 @@ export interface PlayerContextType {
   setPlayerName: (name: string) => void;
   playerRank: string;
   setPlayerRank: (rank: string) => void;
+  playerCreated: string;
+  setPlayerCreated: (rank: string) => void;
   playerExp: number;
   setPlayerExp: (exp: number) => void;
   playerDayStreak: number;
@@ -35,6 +38,7 @@ const PlayerContext = createContext<PlayerContextType | undefined>(undefined);
 export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [playerName, setPlayerName] = useState("");
   const [playerRank, setPlayerRank] = useState("");
+  const [playerCreated, setPlayerCreated] = useState("");
   const [workoutLogs, setWorkoutLogs] = useState<WorkoutLog[]>([]);
   const [playerExp, setPlayerExp] = useState(0);
   const [playerDayStreak, setPlayerDayStreak] = useState(0);
@@ -55,11 +59,12 @@ export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) 
           .single();
 
           if (!error && userData) {
-            // console.log('Fetched user data:', userData); // Debugging line
+            console.log('Fetched user data:', userData); // Debugging line
             setPlayerName(userData.playerName);
             setPlayerRank(userData.playerRank);
             setPlayerExp(userData.playerExp);
             setPlayerDayStreak(userData.playerDayStreak);
+            setPlayerCreated(formatTimestampToDate(userData.created_at));
             setEmail(userData.email);
              // Ensure workoutLogs are set
             setWorkoutLogs(userData.workoutLogs || []);
@@ -78,6 +83,7 @@ export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     setPlayerRank('');
     setPlayerExp(0);
     setPlayerDayStreak(0);
+    setPlayerCreated('');
     setEmail('');
   };
 
@@ -94,6 +100,8 @@ export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       setPlayerExp,
       playerDayStreak,
       setPlayerDayStreak,
+      playerCreated,
+      setPlayerCreated,
       email,
       setEmail,
       logout

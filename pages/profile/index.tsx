@@ -19,8 +19,17 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+
+
 import { useRouter } from "next/router";
 import MenuNavigation from "@/components/MenuNavigation";
+import Link from "next/link";
  
 
 const ProfilePage = () => {
@@ -155,13 +164,16 @@ const ProfilePage = () => {
     logout();
     router.push("/");
   }
+  const handleLogin = () => {
+    router.push("/");
+  }
 
   return (
     <div className="flex flex-col items-center p-6 min-h-screen bg-gradient-to-tr from-gray-800 via-gray-500 to-gray-800 relative">
       {/* Background Overlay Dark Screen */}
       <div className="h-full w-full bg-black/80 absolute top-0 left-0 z-0"/>
-      {/* Logout Buttton */}
-      <button onClick={handleLogOut} className="absolute top-2 left-2 z-10 bg-white/10z-10 text-xs text-red-600 tracking-wider font-semibold ">Logout</button>
+      {/* Logout / Login Buttton */}
+      <button onClick={playerRank ? handleLogOut : handleLogin} className={`absolute top-2 left-2 z-10 bg-white/10z-10 text-xs tracking-wider font-semibold ${playerRank ? "text-red-600" : "text-blue-600"}`}>{playerRank ? "Logout" : "Login"}</button>
 
 
       <div className="z-10 text-white flex flex-col items-center">
@@ -169,7 +181,13 @@ const ProfilePage = () => {
         <p className="text-center pb-6 font-bold uppercase tracking-widest">Profile</p>
         <img src="./images/noob.png" alt="profile_pic" width={100} height={100} className="rounded-full h-[120px] w-[120px]"/>
         <p className="font-semibold capitalize pt-2 pb-4">{playerName}</p>
-        <div className="flex gap-3 justify-center items-center uppercase">
+        {!playerRank && 
+        <div className="flex flex-col justify-center items-center tracking-widest gap-4 pt-20">
+          <p>Nothing to see here</p>
+          <p>Login to play the game</p>
+          <Link href={"/"}><Button className="bg-blue-700 hover:bg-blue-800 font-bold">Login</Button></Link>
+        </div>}
+        {playerRank && <div className="flex gap-3 justify-center items-center uppercase">
           <div className="flex flex-col from-zinc-800 via-zinc-800 bg-gradient-to-b p-3 justify-center items-center drop-shadow-md rounded w-14 h-14 aspect-square">
             <p className="font-bold tracking-widest text-[8px]">Exp</p>
             <p className="text-sm font-semibold">{playerExp}</p>
@@ -182,12 +200,12 @@ const ProfilePage = () => {
               `}>{playerRank}</p>
           </div>
           <div className="flex flex-col from-zinc-800 via-zinc-800 bg-gradient-to-b p-3 justify-center items-center drop-shadow-md rounded w-14 h-14 aspect-square">
-            <p className="font-bold tracking-widest text-[8px]">Days</p>
+            <p className="font-bold tracking-widest text-[8px]">Streak</p>
             <p className="text-sm font-semibold">{playerDayStreak}</p>
           </div>
-        </div>
+        </div>}
 
-        <div className="flex flex-col gap-4 my-4 shadow-md shadow-white/10 rounded-lg bg-black p-4 w-[90vw] lg:max-w-sm relative">
+        {playerRank && <div className="flex flex-col gap-4 my-4 shadow-md shadow-white/10 rounded-lg bg-black p-4 w-[90vw] lg:max-w-sm relative">
           <p className={`text-xl font-extrabold text-center tracking-wider uppercase bg-gradient-to-r bg-clip-text text-transparent ${todaysWorkoutComleted ? "from-green-800 via-green-500 to-green-800" : "from-red-800 via-red-500 to-red-800"}`}>
             Today&apos;s Task
           </p>
@@ -204,10 +222,25 @@ const ProfilePage = () => {
             <p className={`${todaysWorkoutComleted && "line-through"}`}>{calculateTimeLeftTillEndOfDay(timeNow)}</p>
             {!todaysWorkoutComleted && <FaHourglassStart className="text-white"/>}
           </Button>
-          <Button onClick={handleSubmitTodaysWorkout} disabled={todaysWorkoutComleted} className={`${todaysWorkoutComleted ? "bg-zinc-700 hover:bg-zinc-600 text-white" : "bg-blue-700 hover:bg-blue-800"} font-bold`}>{todaysWorkoutComleted ? "Completed" : "Set as Complete"}</Button>
-        </div>
+          
+          {/* <Button onClick={handleSubmitTodaysWorkout} disabled={todaysWorkoutComleted} className={`${todaysWorkoutComleted ? "bg-zinc-700 hover:bg-zinc-600 text-white" : "bg-blue-700 hover:bg-blue-800"} font-bold`}>{todaysWorkoutComleted ? "Completed" : "Set as Complete"}</Button> */}
+          <Dialog>
+            <DialogTrigger asChild>
+              {/* <Button onClick={handlePlayMusic} className="w-full max-w-[200px] font-bold">Login</Button> */}
+              <Button disabled={todaysWorkoutComleted} className={`${todaysWorkoutComleted ? "bg-zinc-700 hover:bg-zinc-600 text-white" : "bg-blue-700 hover:bg-blue-800"} font-bold`}>{todaysWorkoutComleted ? "Completed" : "Set as Complete"}</Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-[90vw] lg:max-w-md rounded-lg bg-black text-white p-4">
+                <p className="font-bold text-center">{`Finished Today's Workout?`}</p>
+                <div className="grid grid-cols-2 gap-2">
+                  <DialogClose className={`bg-red-700 hover:bg-red-800 font-bold rounded-md`}><Button className={`bg-red-700 hover:bg-red-800 font-bold`}>No</Button></DialogClose>
+                  <DialogClose onClick={handleSubmitTodaysWorkout} className={`bg-blue-700 hover:bg-blue-800 font-bold rounded-md`}><Button className={`bg-blue-700 hover:bg-blue-800 font-bold`}>Yes</Button></DialogClose>
+                </div>
+                {/* <LoginUser isSignUp={false} /> */}
+            </DialogContent>
+          </Dialog>
+        </div>}
 
-        <div className="flex flex-col gap-4 my-4 shadow-md shadow-white/10 rounded-lg bg-black p-4 w-[90vw] lg:max-w-sm relative mb-16">
+        {playerRank && <div className="flex flex-col gap-4 my-4 shadow-md shadow-white/10 rounded-lg bg-black p-4 w-[90vw] lg:max-w-sm relative mb-16">
           <p className="font-bold text-center">Workout History</p>
           <Table>
             <TableCaption className="text-[10px] tracking-wider">A list of your all your accumulated hard work.</TableCaption>
@@ -246,7 +279,8 @@ const ProfilePage = () => {
               </TableRow>
             </TableFooter>
           </Table>
-        </div>
+        </div>}
+        
 
         <MenuNavigation />
 
