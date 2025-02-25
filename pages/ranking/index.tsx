@@ -1,3 +1,6 @@
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+
 import { usePlayer } from '@/context/PlayerContext';
 import { supabase } from '@/lib/supabaseClient';
 
@@ -67,6 +70,13 @@ const RankingPage = () => {
 
     fetchAllUsers();
   }, []);
+  
+  useEffect(() => {
+    AOS.init({
+      duration: 1000, // Animation duration in milliseconds
+      once: true, // Whether animation should happen only once
+    });
+  }, []);
 
   return (
     <div className="flex flex-col items-center p-6 min-h-screen bg-gradient-to-tr from-gray-800 via-gray-500 to-gray-800 relative">
@@ -81,7 +91,7 @@ const RankingPage = () => {
         <div className="flex justify-center items-center my-6 py-3 w-[90vw] bg-gradient-to-tr from-yellow-600 via-yellow-400 to-yellow-600 rounded-lg"><span className="font-bold uppercase tracking-widest text-black">Global Ranking</span></div>
         
         {playerName && 
-          <div className="flex gap-4 w-[90vw] lg:max-w-sm bg-black shadow-md shadow-white/10 rounded-lg p-4">
+          <div data-aos="fade-in" className="flex gap-4 w-[90vw] lg:max-w-sm bg-black shadow-md shadow-white/10 rounded-lg p-4">
             <img src="./images/noob.png" alt="profile_pic" width={100} height={100} className="rounded-full h-[100px] w-[100px]"/>
             <div className="flex flex-col justify-between">
               <div className="flex justify-between font-semibold capitalize">
@@ -113,7 +123,7 @@ const RankingPage = () => {
           </div>
         }
 
-        <div className="flex flex-col gap-4 my-4 shadow-md shadow-white/10 rounded-lg bg-black p-4 w-[90vw] lg:max-w-sm relative mb-16">
+        <div data-aos="fade-in" className="flex flex-col gap-4 my-4 shadow-md shadow-white/10 rounded-lg bg-black p-4 w-[90vw] lg:max-w-sm relative mb-16">
           <p className="font-bold text-center tracking-widest text-yellow-300 uppercase">Hall of Fame</p>
           <Table>
             <TableCaption className="text-[10px] tracking-wider">Train daily, lock in and raise throught the ranks.</TableCaption>

@@ -1,3 +1,6 @@
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+
 import { Button } from "@/components/ui/button";
 
 import { usePlayer } from '@/context/PlayerContext';
@@ -168,6 +171,14 @@ const ProfilePage = () => {
     router.push("/");
   }
 
+  useEffect(() => {
+    AOS.init({
+      duration: 1000, // Animation duration in milliseconds
+      once: true, // Whether animation should happen only once
+    });
+  }, []);
+
+
   return (
     <div className="flex flex-col items-center p-6 min-h-screen bg-gradient-to-tr from-gray-800 via-gray-500 to-gray-800 relative">
       {/* Background Overlay Dark Screen */}
@@ -187,7 +198,7 @@ const ProfilePage = () => {
           <p>Login to play the game</p>
           <Link href={"/"}><Button className="bg-blue-700 hover:bg-blue-800 font-bold">Login</Button></Link>
         </div>}
-        {playerRank && <div className="flex gap-3 justify-center items-center uppercase">
+        {playerRank && <div data-aos="fade-in" className="flex gap-3 justify-center items-center uppercase">
           <div className="flex flex-col from-zinc-800 via-zinc-800 bg-gradient-to-b p-3 justify-center items-center drop-shadow-md rounded w-14 h-14 aspect-square">
             <p className="font-bold tracking-widest text-[8px]">Exp</p>
             <p className="text-sm font-semibold">{playerExp}</p>
@@ -205,7 +216,7 @@ const ProfilePage = () => {
           </div>
         </div>}
 
-        {playerRank && <div className="flex flex-col gap-4 my-4 shadow-md shadow-white/10 rounded-lg bg-black p-4 w-[90vw] lg:max-w-sm relative">
+        {playerRank && <div data-aos="fade-in" className="flex flex-col gap-4 my-4 shadow-md shadow-white/10 rounded-lg bg-black p-4 w-[90vw] lg:max-w-sm relative">
           <p className={`text-xl font-extrabold text-center tracking-wider uppercase bg-gradient-to-r bg-clip-text text-transparent ${todaysWorkoutComleted ? "from-green-800 via-green-500 to-green-800" : "from-red-800 via-red-500 to-red-800"}`}>
             Today&apos;s Task
           </p>
@@ -240,7 +251,7 @@ const ProfilePage = () => {
           </Dialog>
         </div>}
 
-        {playerRank && <div className="flex flex-col gap-4 my-4 shadow-md shadow-white/10 rounded-lg bg-black p-4 w-[90vw] lg:max-w-sm relative mb-16">
+        {playerRank && <div data-aos="fade-in" className="flex flex-col gap-4 my-4 shadow-md shadow-white/10 rounded-lg bg-black p-4 w-[90vw] lg:max-w-sm relative mb-16">
           <p className="font-bold text-center">Workout History</p>
           <Table>
             <TableCaption className="text-[10px] tracking-wider">A list of your all your accumulated hard work.</TableCaption>
