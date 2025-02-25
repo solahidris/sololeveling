@@ -83,12 +83,12 @@ const RankingPage = () => {
       {/* Background Overlay Dark Screen */}
       <div className="h-full w-full bg-black/80 absolute top-0 left-0 z-0"/>
       {/* Logout Buttton */}
-      <button onClick={playerRank ? handleLogOut : handleLogin} className={`absolute top-2 left-2 z-10 bg-white/10z-10 text-xs tracking-wider font-semibold ${playerRank ? "text-red-600" : "text-blue-600"}`}>{playerRank ? "Logout" : "Login"}</button>
+      <button onClick={playerRank ? handleLogOut : handleLogin} className={`absolute top-2 left-2 lg:left-[38%] z-10 bg-white/10z-10 text-xs tracking-wider font-semibold ${playerRank ? "text-red-600" : "text-blue-600"}`}>{playerRank ? "Logout" : "Login"}</button>
 
 
       <div className="z-10 text-white flex flex-col items-center">
-        <p className="absolute top-2 right-2 tracking-wide text-xs font-semibold">{formatCurrentTime(timeNow)}</p>
-        <div className="flex justify-center items-center my-6 py-3 w-[90vw] bg-gradient-to-tr from-yellow-600 via-yellow-400 to-yellow-600 rounded-lg"><span className="font-bold uppercase tracking-widest text-black">Global Ranking</span></div>
+        <p className="absolute top-2 right-2 lg:right-[38%] tracking-wide text-xs font-semibold">{formatCurrentTime(timeNow)}</p>
+        <div className="flex justify-center items-center my-6 py-3 w-[90vw] bg-gradient-to-tr from-yellow-600 via-yellow-400 to-yellow-600 rounded-lg lg:max-w-sm"><span className="font-bold uppercase tracking-widest text-black">Global Ranking</span></div>
         
         {playerName && 
           <div data-aos="fade-in" className="flex gap-4 w-[90vw] lg:max-w-sm bg-black shadow-md shadow-white/10 rounded-lg p-4">

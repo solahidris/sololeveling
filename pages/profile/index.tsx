@@ -184,11 +184,11 @@ const ProfilePage = () => {
       {/* Background Overlay Dark Screen */}
       <div className="h-full w-full bg-black/80 absolute top-0 left-0 z-0"/>
       {/* Logout / Login Buttton */}
-      <button onClick={playerRank ? handleLogOut : handleLogin} className={`absolute top-2 left-2 z-10 bg-white/10z-10 text-xs tracking-wider font-semibold ${playerRank ? "text-red-600" : "text-blue-600"}`}>{playerRank ? "Logout" : "Login"}</button>
+      <button onClick={playerRank ? handleLogOut : handleLogin} className={`absolute top-2 left-2 lg:left-[38%] z-10 bg-white/10z-10 text-xs tracking-wider font-semibold ${playerRank ? "text-red-600" : "text-blue-600"}`}>{playerRank ? "Logout" : "Login"}</button>
 
 
       <div className="z-10 text-white flex flex-col items-center">
-        <p className="absolute top-2 right-2 tracking-wide text-xs font-semibold">{formatCurrentTime(timeNow)}</p>
+        <p className="absolute top-2 right-2 lg:right-[38%] tracking-wide text-xs font-semibold">{formatCurrentTime(timeNow)}</p>
         <p className="text-center pb-6 font-bold uppercase tracking-widest">Profile</p>
         <img src="./images/noob.png" alt="profile_pic" width={100} height={100} className="rounded-full h-[120px] w-[120px]"/>
         <p className="font-semibold capitalize pt-2 pb-4">{playerName}</p>
