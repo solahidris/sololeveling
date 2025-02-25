@@ -10,9 +10,9 @@ export default function Document() {
         <meta name="author" content="Solah Idris" />
         <meta property="og:title" content="Solo Leveling Fitness Tracker by Solah" />
         <meta property="og:description" content="Level up like nobody's business with the anime inspired Solo Leveling daily routine. Level up the ranks and claim your throne." />
-        <meta property="og:url" content="https://sololevelingv0.vercel.app/" />
+        <meta property="og:url" content="https://sololeveling.hiresolah.com/" />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content="https://sololevelingv0.vercel.app/images/noob.png" />
+        <meta property="og:image" content="https://sololeveling.hiresolah.com/images/main.png" />
       </Head>
       <body className="antialiased bg-black">
         <Main />
