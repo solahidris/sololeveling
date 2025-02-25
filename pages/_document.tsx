@@ -4,6 +4,7 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
+        <title>Solo Leveling Fitness Tracker by Solah</title>
         <meta name="description" content="Level up like nobody's business with the anime inspired Solo Leveling daily routine. Level up the ranks and claim your throne." />
         <meta name="keywords" content="solo, leveling, solo leveling, anime, solah, idris, solah idris" />
         <meta name="author" content="Solah Idris" />
