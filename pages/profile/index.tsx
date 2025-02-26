@@ -250,6 +250,33 @@ const ProfilePage = () => {
             </DialogContent>
           </Dialog>
         </div>}
+        
+        {playerRank && <div data-aos="fade-in" className="flex flex-col gap-4 my-4 shadow-md shadow-white/10 rounded-lg bg-black p-4 w-[90vw] lg:max-w-sm relative">
+          <p className={`text-xl font-extrabold text-center tracking-wider uppercase bg-gradient-to-r bg-clip-text text-transparent from-zinc-800 via-zinc-500 to-zinc-800`}>
+            Game Mechanics
+          </p>
+          
+          <Dialog>
+            <DialogTrigger asChild>
+              {/* <Button onClick={handlePlayMusic} className="w-full max-w-[200px] font-bold">Login</Button> */}
+              <Button className={`${todaysWorkoutComleted ? "bg-zinc-700 hover:bg-zinc-600 text-white/70" : "bg-blue-700 hover:bg-blue-800"} font-bold`}>
+                {`How to play?`}
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-[90vw] lg:max-w-md rounded-lg bg-black text-white p-4">
+                <p className="font-bold text-xl pt-4 pb-2 tracking-tight capitalize">{`The game mechanics is simple`}</p>
+                <div className='flex flex-col gap-3 tracking-wider text-sm'>
+                  <p className="">1&#41; Workout daily for 7 days to <span className='font-semibold bg-green-600 px-1.5'>rank up.</span></p>
+                  <p className="">2&#41; Workout <span className='font-semibold bg-blue-600 px-1.5'>task increases</span> as you rank higher up.</p>
+                  <p className="">3&#41; Miss/skip any workout and you will <span className='font-semibold bg-yellow-600 px-1.5'>rank down.</span></p>
+                  <p className="">4&#41; Miss &gt;3 days and your account will be <span className='font-semibold bg-red-600 px-1.5'>banned.</span></p>
+                </div>
+                <div className="grid gap-2">
+                  <DialogClose className={`bg-zinc-700 hover:bg-zinc-800 font-bold rounded-md`}><Button className={`bg-zinc-700 hover:bg-zinc-800 font-bold`}>Close</Button></DialogClose>
+                </div>
+            </DialogContent>
+          </Dialog>
+        </div>}
 
         {playerRank && <div data-aos="fade-in" className="flex flex-col gap-4 my-4 shadow-md shadow-white/10 rounded-lg bg-black p-4 w-[90vw] lg:max-w-sm relative mb-16">
           <p className="font-bold text-center">Workout History</p>
