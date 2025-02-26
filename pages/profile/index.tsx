@@ -265,11 +265,12 @@ const ProfilePage = () => {
             </DialogTrigger>
             <DialogContent className="max-w-[90vw] lg:max-w-md rounded-lg bg-black text-white p-4">
                 <p className="font-bold text-xl pt-4 pb-2 tracking-tight capitalize">{`The game mechanics is simple`}</p>
-                <div className='flex flex-col gap-3 tracking-wider text-sm'>
-                  <p className="">1&#41; Workout daily for 7 days to <span className='font-semibold bg-green-600 px-1.5'>rank up.</span></p>
+                <div className='flex flex-col gap-3 tracking-widest text-sm'>
+                  <p className="">1&#41; Workout daily for 7 days <br/>to <span className='font-semibold bg-green-600 px-1.5'>rank up.</span></p>
                   <p className="">2&#41; Workout <span className='font-semibold bg-blue-600 px-1.5'>task increases</span> as you rank higher up.</p>
-                  <p className="">3&#41; Miss/skip any workout and you will <span className='font-semibold bg-yellow-600 px-1.5'>rank down.</span></p>
-                  <p className="">4&#41; Miss &gt;3 days and your account will be <span className='font-semibold bg-red-600 px-1.5'>banned.</span></p>
+                  <p className="">3&#41; Miss/skip any workout and <br/>you will <span className='font-semibold bg-yellow-600 px-1.5'>rank down.</span></p>
+                  <p className="">4&#41; Miss &gt;3 days and your account <br/>will be <span className='font-semibold bg-red-600 px-1.5'>banned.</span></p>
+                  <p className="py-4">Note: Penalty system will start on <br/><span className='font-semibold bg-red-600 px-1.5'>10 March 2025</span></p>
                 </div>
                 <div className="grid gap-2">
                   <DialogClose className={`bg-zinc-700 hover:bg-zinc-800 font-bold rounded-md`}><Button className={`bg-zinc-700 hover:bg-zinc-800 font-bold`}>Close</Button></DialogClose>

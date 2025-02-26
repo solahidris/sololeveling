@@ -59,7 +59,7 @@ export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) 
           .single();
 
           if (!error && userData) {
-            console.log('Fetched user data:', userData); // Debugging line
+            // console.log('Fetched user data:', userData); // Debugging line
             setPlayerName(userData.playerName);
             setPlayerRank(userData.playerRank);
             setPlayerExp(userData.playerExp);

@@ -33,6 +33,7 @@ const RankingPage = () => {
   const [timeNow, setTimeNow] = useState(new Date());
   const [allUsers, setAllUsers] = useState<User[]>([]); // State to hold all users
   const [playerGlobalRank, setPlayerGlobalRank] = useState(0);
+  const [totalPlayersInGame, setTotalPlayersInGame] = useState(0);
 
   useEffect(() => {
     const intervalId = setInterval(() => { setTimeNow(new Date()); }, 60000); // Update every minute
@@ -49,16 +50,19 @@ const RankingPage = () => {
 
   useEffect(() => {
     const fetchAllUsers = async () => {
-      const { data, error } = await supabase
+      const { data, error, count } = await supabase
         .from('users')
-        .select('playerName, playerRank, playerExp')
-        .order('playerExp', { ascending: false }); // Order by experience descending
+        .select('playerName, playerRank, playerExp', { count: 'exact' }) // Fetch count of users
+        .order('playerExp', { ascending: false }) // Order by experience descending
+        .limit(100); // Limit to top 100 users
 
       if (error) {
         console.error('Error fetching users:', error);
       } else {
         setAllUsers(data || []);
-        console.log(data);
+        // console.log(data);
+        setTotalPlayersInGame(count || 0);
+        console.log('Total number of users:', count);
         
         // Find the current player's rank
         const currentPlayerIndex = data?.findIndex(user => user.playerName === playerName);
@@ -126,7 +130,12 @@ const RankingPage = () => {
         <div data-aos="fade-in" className="flex flex-col gap-4 my-4 shadow-md shadow-white/10 rounded-lg bg-black p-4 w-[90vw] lg:max-w-sm relative mb-16">
           <p className="font-bold text-center tracking-widest text-yellow-300 uppercase">Hall of Fame</p>
           <Table>
-            <TableCaption className="text-[10px] tracking-wider">Train daily, lock in and raise throught the ranks.</TableCaption>
+            <TableCaption className="text-[10px] tracking-wider">
+              <div>
+                <p>{`Train daily, lock in and raise throught the ranks.`}</p>
+                <p>{`Total number of players: ${totalPlayersInGame}`}</p>
+              </div>
+            </TableCaption>
             <TableHeader>
               <TableRow className="text-center text-xs text-start">
                 <TableHead className="px-2 h-8 text-white/90 font-semibold">No #</TableHead>
