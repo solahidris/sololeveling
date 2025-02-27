@@ -12,7 +12,7 @@ export default function Document() {
         <meta property="og:description" content="Level up like nobody's business with the anime inspired Solo Leveling daily routine. Level up the ranks and claim your throne." />
         <meta property="og:url" content="https://www.oursololeveling.com/" />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content="https://www.oursololeveling.com/images/main.png" />
+        <meta property="og:image" content="https://www.oursololeveling.com/images/main_new.png" />
         {/* <!-- Cloudflare Web Analytics --> */}
         <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "9fa6a3af8cd04548854f5491b219f08c"}'></script>
         {/* <!-- End Cloudflare Web Analytics --> */}

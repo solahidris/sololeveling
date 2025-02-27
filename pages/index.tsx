@@ -50,7 +50,7 @@ const Home = () => {
   return (
     <div className="flex flex-col justify-center items-center min-h-[100vh] bg-gradient-to-tr from-gray-800 via-gray-500 to-gray-800 bg-opacity-[10%]">
       <img
-        src="./images/main.png"
+        src="./images/main_new.png"
         alt="mainimage"
         width={400}
         height={400}
