@@ -11,6 +11,8 @@ import { formatCurrentTime } from "@/functions/formatCurrentTime";
 import { getWorkoutCounts } from "@/functions/getWorkoutCounts";
 import { useEffect, useState } from "react";
 import { FaHourglassStart } from "react-icons/fa6";
+import { calculateDayStreak } from '@/functions/calculateDayStreak';
+import { calculateNewExperience } from '@/functions/calculateNewExperience';
 
 import {
   Table,
@@ -75,8 +77,91 @@ const ProfilePage = () => {
     setTodaysWorkoutComleted(isTodayCompleted);
   }, [workoutLogs]);
 
+  // const handleSubmitTodaysWorkout = async () => {
+  //   const today = new Date();
+  //   const isTodayCompleted = workoutLogs.some(log => {
+  //     const logDate = new Date(log.date);
+  //     return (
+  //       logDate.getDate() === today.getDate() &&
+  //       logDate.getMonth() === today.getMonth() &&
+  //       logDate.getFullYear() === today.getFullYear()
+  //     );
+  //   });
+  
+  //   if (isTodayCompleted) {
+  //     console.log('Workout for today is already completed.');
+  //     return; // Exit the function if today's workout is already logged
+  //   }
+  
+  //   setTodaysWorkoutComleted(true);
+  
+  //   const newLog = {
+  //     id: Date.now(), // Ensure unique ID by using current timestamp
+  //     date: today,
+  //     pushup: workoutPushupCount,
+  //     situp: workoutSitupsCount,
+  //     squats: workoutSquatsCount,
+  //     run: workoutRunCount,
+  //   };
+  
+  //   // Add the new workout log to the local state
+  //   addWorkoutLog(newLog);
+  
+  //   // Calculate new player experience using the updated workoutLogs
+  //   const updatedWorkoutLogs = [...workoutLogs, newLog];
+  //   const newExp = parseFloat((updatedWorkoutLogs.length * Math.PI * 100).toFixed(0));
+  //   setPlayerExp(newExp);
+  
+  //   // Calculate the day streak
+  //   const sortedLogs = updatedWorkoutLogs.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  //   let streak = 0;
+  //   let currentStreak = 0;
+  //   let lastDate: Date | null = null; // Explicitly define the type
+  
+  //   sortedLogs.forEach(log => {
+  //     const logDate = new Date(log.date);
+  //     if (lastDate) {
+  //       const isConsecutiveDay =
+  //         logDate.getDate() === lastDate.getDate() + 1 &&
+  //         logDate.getMonth() === lastDate.getMonth() &&
+  //         logDate.getFullYear() === lastDate.getFullYear();
+  
+  //       if (isConsecutiveDay) {
+  //         currentStreak++;
+  //       } else if (logDate > lastDate) {
+  //         currentStreak = 1;
+  //       }
+  //     } else {
+  //       currentStreak = 1; // Initialize streak for the first log
+  //     }
+  //     lastDate = logDate;
+  //     streak = Math.max(streak, currentStreak);
+  //   });
+  
+  //   setPlayerDayStreak(streak);
+  
+  //   console.log("Updating Supabase with newExp:", newExp, "and updatedWorkoutLogs:", updatedWorkoutLogs);
+  
+  //   // Update the user's playerExp, workoutLogs, and playerDayStreak in the database
+  //   const { error } = await supabase
+  //     .from('users')
+  //     .update({
+  //       playerExp: newExp,
+  //       workoutLogs: updatedWorkoutLogs, // Assuming workoutLogs is stored as a JSON array
+  //       playerDayStreak: streak
+  //     })
+  //     .eq('email', email); // Use the user's email to identify the record
+  
+  //   if (error) {
+  //     console.error('Error updating user data:', error.message);
+  //   } else {
+  //     console.log('User data updated successfully in Supabase');
+  //   }
+  // };
   const handleSubmitTodaysWorkout = async () => {
     const today = new Date();
+    
+    // Check if today's workout is already completed
     const isTodayCompleted = workoutLogs.some(log => {
       const logDate = new Date(log.date);
       return (
@@ -88,13 +173,13 @@ const ProfilePage = () => {
   
     if (isTodayCompleted) {
       console.log('Workout for today is already completed.');
-      return; // Exit the function if today's workout is already logged
+      return;
     }
   
     setTodaysWorkoutComleted(true);
   
     const newLog = {
-      id: Date.now(), // Ensure unique ID by using current timestamp
+      id: Date.now(),
       date: today,
       pushup: workoutPushupCount,
       situp: workoutSitupsCount,
@@ -105,61 +190,40 @@ const ProfilePage = () => {
     // Add the new workout log to the local state
     addWorkoutLog(newLog);
   
-    // Calculate new player experience using the updated workoutLogs
+    // Calculate new player experience
     const updatedWorkoutLogs = [...workoutLogs, newLog];
-    const newExp = parseFloat((updatedWorkoutLogs.length * Math.PI * 100).toFixed(0));
+    const newExp = calculateNewExperience(updatedWorkoutLogs);
     setPlayerExp(newExp);
   
     // Calculate the day streak
-    const sortedLogs = updatedWorkoutLogs.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-    let streak = 0;
-    let currentStreak = 0;
-    let lastDate: Date | null = null; // Explicitly define the type
-  
-    sortedLogs.forEach(log => {
-      const logDate = new Date(log.date);
-      if (lastDate) {
-        const isConsecutiveDay =
-          logDate.getDate() === lastDate.getDate() + 1 &&
-          logDate.getMonth() === lastDate.getMonth() &&
-          logDate.getFullYear() === lastDate.getFullYear();
-  
-        if (isConsecutiveDay) {
-          currentStreak++;
-        } else if (logDate > lastDate) {
-          currentStreak = 1;
-        }
-      } else {
-        currentStreak = 1; // Initialize streak for the first log
-      }
-      lastDate = logDate;
-      streak = Math.max(streak, currentStreak);
-    });
-  
+    const streak = calculateDayStreak(updatedWorkoutLogs);
     setPlayerDayStreak(streak);
   
     console.log("Updating Supabase with newExp:", newExp, "and updatedWorkoutLogs:", updatedWorkoutLogs);
   
-    // Update the user's playerExp, workoutLogs, and playerDayStreak in the database
-    const { error } = await supabase
-      .from('users')
-      .update({
-        playerExp: newExp,
-        workoutLogs: updatedWorkoutLogs, // Assuming workoutLogs is stored as a JSON array
-        playerDayStreak: streak
-      })
-      .eq('email', email); // Use the user's email to identify the record
+    try {
+      const { error } = await supabase
+        .from('users')
+        .update({
+          playerExp: newExp,
+          workoutLogs: updatedWorkoutLogs,
+          playerDayStreak: streak
+        })
+        .eq('email', email);
   
-    if (error) {
-      console.error('Error updating user data:', error.message);
-    } else {
+      if (error) throw error;
+  
       console.log('User data updated successfully in Supabase');
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error('Error updating user data:', error.message);
+      } else {
+        console.error('An unknown error occurred:', error);
+      }
     }
   };
 
-  // useEffect(() => {
-  //   console.log('Rendering WorkoutLogList with logs:', workoutLogs);
-  // }, [workoutLogs]);
+
 
   const router = useRouter();
 
