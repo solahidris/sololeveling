@@ -13,6 +13,9 @@ export default function Document() {
         <meta property="og:url" content="https://sololeveling.hiresolah.com/" />
         <meta property="og:type" content="website" />
         <meta property="og:image" content="https://sololeveling.hiresolah.com/images/main.png" />
+        {/* <!-- Cloudflare Web Analytics --> */}
+        <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "9fa6a3af8cd04548854f5491b219f08c"}'></script>
+        {/* <!-- End Cloudflare Web Analytics --> */}
       </Head>
       <body className="antialiased bg-black">
         <Main />
