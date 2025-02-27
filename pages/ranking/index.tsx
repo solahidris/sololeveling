@@ -54,7 +54,8 @@ const RankingPage = () => {
         .from('users')
         .select('playerName, playerRank, playerExp', { count: 'exact' }) // Fetch count of users
         .order('playerExp', { ascending: false }) // Order by experience descending
-        .limit(100); // Limit to top 100 users
+        // .limit(100); // Limit to top 100 users
+        .limit(30); // Limit to top 30 users
 
       if (error) {
         console.error('Error fetching users:', error);
