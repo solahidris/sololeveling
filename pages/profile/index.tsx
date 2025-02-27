@@ -259,8 +259,8 @@ const ProfilePage = () => {
           <Dialog>
             <DialogTrigger asChild>
               {/* <Button onClick={handlePlayMusic} className="w-full max-w-[200px] font-bold">Login</Button> */}
-              <Button className={`${todaysWorkoutComleted ? "bg-zinc-700 hover:bg-zinc-600 text-white/70" : "bg-blue-700 hover:bg-blue-800"} font-bold`}>
-                {`How to play?`}
+              <Button className={`bg-zinc-700 hover:bg-zinc-600 text-white/70 font-bold`}>
+                {`How to Play?`}
               </Button>
             </DialogTrigger>
             <DialogContent className="max-w-[90vw] lg:max-w-md rounded-lg bg-black text-white p-4">
@@ -271,6 +271,38 @@ const ProfilePage = () => {
                   <p className="">3&#41; Miss/skip any workout and <br/>you will <span className='font-semibold bg-yellow-600 px-1.5'>rank down.</span></p>
                   <p className="">4&#41; Miss &gt;3 days and your account <br/>will be <span className='font-semibold bg-red-600 px-1.5'>banned.</span></p>
                   <p className="py-4">Note: Penalty system will start on <br/><span className='font-semibold bg-red-600 px-1.5'>10 March 2025</span></p>
+                </div>
+                <div className="grid gap-2">
+                  <DialogClose className={`bg-zinc-700 hover:bg-zinc-800 font-bold rounded-md`}><Button className={`bg-zinc-700 hover:bg-zinc-800 font-bold`}>Close</Button></DialogClose>
+                </div>
+            </DialogContent>
+          </Dialog>
+        </div>}
+
+        {playerRank && <div data-aos="fade-in" className="flex flex-col gap-4 my-4 shadow-md shadow-white/10 rounded-lg bg-black p-4 w-[90vw] lg:max-w-sm relative">
+          <p className={`text-xl font-extrabold text-center tracking-wider uppercase bg-gradient-to-r bg-clip-text text-transparent from-zinc-800 via-zinc-500 to-zinc-800`}>
+            App Development
+          </p>
+          
+          <Dialog>
+            <DialogTrigger asChild>
+              {/* <Button onClick={handlePlayMusic} className="w-full max-w-[200px] font-bold">Login</Button> */}
+              <Button className={`bg-gradient-to-tr from-yellow-700 via-yellow-400 to-yellow-700 hover:bg-yellow-800 text-white/100 text-shadow font-bold`} style={{ textShadow: '1px 1px 2px rgb(135, 106, 12)' }}>
+                {`Join the Movement`}
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-[90vw] lg:max-w-md rounded-lg bg-black text-white p-4">
+                <p className="font-bold text-xl pt-4 pb-2 tracking-tight capitalize">{`Building a game is costly`}</p>
+                <div className='flex flex-col gap-3 tracking-widest text-xs'>
+                  <p className="">1&#41; Because we need more <span className='font-semibold bg-green-600 px-1.5'>S-rank</span> real life people in real life. Tokyo meetup one fine day?</p>
+                  <p className="">2&#41; I code solo. And coding is <br/> <span className='font-semibold bg-blue-600 px-1.5'>super stressful</span> but I really want to make this work.</p>
+                  {/* <p className="">3&#41; Let's build an actual non toxic<br/><span className='font-semibold bg-yellow-600 px-1.5'>anime community</span></p> */}
+                  {/* <p className="">3&#41; I want to ultimately meet up with all the <span className='font-semibold bg-red-600 px-1.5'>S-rank</span> players IRL. Tokyo?</p> */}
+                  <p className="">3&#41; Lastly, lets be real, I need to pay bills, servers and development cost. I dont have much to begin with. This started as a joke but lets make it a real <span className='font-semibold bg-green-600 px-1.5'>W</span> for once. Im getting tired of always losing in life.</p>
+                  <p className="py-2 text-[10px]">Note: Thank you for the kind dms. I really didnt expect any traffic tbh. <br/>- <span className='font-semibold bg-red-600 px-1.5'>Solah, S-Rank Dev</span> </p>
+                  <p className="text-[10px] text-sky-400 leading-tight">{`* By purchasing the OG NFT, you will receive in-game benefits once the app is complete`}</p>
+                  <Link href="https://opensea.io/collection/our-solo-leveling/overview" className='w-full'><Button className='w-full bg-blue-700 hover:bg-blue-800 font-bold'>OpenSea NFT</Button></Link>
+                  <Link href="https://www.paypal.com/ncp/payment/L9WWND5R4YXA6" className='w-full'><Button className='w-full bg-blue-700 hover:bg-blue-800 font-bold'>Paypal</Button></Link>
                 </div>
                 <div className="grid gap-2">
                   <DialogClose className={`bg-zinc-700 hover:bg-zinc-800 font-bold rounded-md`}><Button className={`bg-zinc-700 hover:bg-zinc-800 font-bold`}>Close</Button></DialogClose>
