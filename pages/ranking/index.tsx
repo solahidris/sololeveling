@@ -29,7 +29,7 @@ interface User {
 const RankingPage = () => {
 
   const router = useRouter();
-  const { playerName, playerRank, playerExp, playerDayStreak, playerCreated, logout } = usePlayer();
+  const { playerName, playerRank, playerExp, playerDayStreak, playerCreated, bannedPermanently, logout } = usePlayer();
   const [timeNow, setTimeNow] = useState(new Date());
   const [allUsers, setAllUsers] = useState<User[]>([]); // State to hold all users
   const [playerGlobalRank, setPlayerGlobalRank] = useState(0);
@@ -53,6 +53,7 @@ const RankingPage = () => {
       const { data, error, count } = await supabase
         .from('users')
         .select('playerName, playerRank, playerExp', { count: 'exact' }) // Fetch count of users
+        .eq('bannedPermanently', false) // Exclude permanently banned users
         .order('playerExp', { ascending: false }) // Order by experience descending
         // .limit(100); // Limit to top 100 users
         .limit(30); // Limit to top 30 users
@@ -65,11 +66,27 @@ const RankingPage = () => {
         setTotalPlayersInGame(count || 0);
         console.log('Total number of users:', count);
         
-        // Find the current player's rank
-        const currentPlayerIndex = data?.findIndex(user => user.playerName === playerName);
-        if (currentPlayerIndex !== undefined && currentPlayerIndex !== -1) {
-          setPlayerGlobalRank(currentPlayerIndex + 1); // Rank is index + 1
-        }
+        // // Find the current player's rank
+        // // I NEED TO REPLACE THIS SINCE IT DONT WORK. IT NEEDS TO FIND WITHIN THE DB NOT THE limit 30
+        // const currentPlayerIndex = data?.findIndex(user => user.playerName === playerName);
+        // if (currentPlayerIndex !== undefined && currentPlayerIndex !== -1) {
+        //   setPlayerGlobalRank(currentPlayerIndex + 1); // Rank is index + 1
+        // }
+        
+        // Find the current player's global rank
+        const { count: higherExpCount, error: rankError } = await supabase
+        .from('users')
+        .select('playerExp', { count: 'exact' })
+        .eq('bannedPermanently', false)
+        .gt('playerExp', playerExp); // Count users with more experience
+
+      if (rankError) {
+        console.error('Error fetching player rank:', rankError);
+      } else {
+        setPlayerGlobalRank((higherExpCount || 0) + 1); // Rank is number of users with more exp + 1
+      }
+
+        
       }
     };
 
@@ -95,16 +112,16 @@ const RankingPage = () => {
         <p className="absolute top-2 right-2 lg:right-[38%] tracking-wide text-xs font-semibold">{formatCurrentTime(timeNow)}</p>
         <div className="flex justify-center items-center my-6 py-3 w-[90vw] bg-gradient-to-tr from-yellow-600 via-yellow-400 to-yellow-600 rounded-lg lg:max-w-sm"><span className="font-bold uppercase tracking-widest text-black">Global Ranking</span></div>
         
-        {playerName && 
+        {playerName && !bannedPermanently ? (
           <div data-aos="fade-in" className="flex gap-4 w-[90vw] lg:max-w-sm bg-black shadow-md shadow-white/10 rounded-lg p-4">
-            <img src="./images/noob.png" alt="profile_pic" width={100} height={100} className="rounded-full h-[100px] w-[100px]"/>
+            <img src="./images/noob.png" alt="profile_pic" width={100} height={100} className={`rounded-full h-[100px] w-[100px] ${bannedPermanently && "grayscale"}`} />
             <div className="flex flex-col justify-between">
               <div className="flex justify-between font-semibold capitalize">
                 <div className="flex flex-col gap-1 pb-4">
                   <p className="">{playerName}</p>
                   <p className="text-xs text-gray-600">{`Joined ${playerCreated}`}</p>
                 </div>  
-                <div><p className="bg-white/10 p-2 rounded-lg aspect-square h-10 w-10">{`# ${playerGlobalRank}`}</p></div>
+                <div><p className="bg-white/10 px-2 py-1 rounded-lg ">{`# ${playerGlobalRank}`}</p></div>
               </div>
 
               <div className="flex flex-wrap gap-2 justify-start items-center uppercase">
@@ -125,7 +142,24 @@ const RankingPage = () => {
               </div>
 
             </div>
-          </div>
+          </div> 
+          ) : (
+            <div data-aos="fade-in" className="flex gap-4 w-[90vw] lg:max-w-sm bg-black shadow-md shadow-white/10 rounded-lg p-4">
+              <img src="./images/noob.png" alt="profile_pic" width={100} height={100} className="rounded-full h-[100px] w-[100px]"/>
+              <div className="flex flex-col w-full">
+                <div className="flex justify-between font-semibold capitalize">
+                  <div className="flex flex-col gap-1 pb-4">
+                    <p className={`${bannedPermanently && "text-red-700 line-through decoration-[3px]"}`}>{playerName}</p>
+                  </div>  
+                  {/* <div><p className="bg-white/10 px-2 py-1 rounded-lg ">{`# ${playerGlobalRank}`}</p></div> */}
+                </div>
+                <div className={`w-full text-xs tracking-widest font-semibold flex gap-2 bg-gradient-to-b from-red-600 p-6 justify-center items-center drop-shadow-md rounded h-6 px-3`}>
+                  <p className="text-xl">GAME OVER</p>
+                </div>
+
+              </div>
+            </div> 
+          )
         }
 
         <div data-aos="fade-in" className="flex flex-col gap-4 my-4 shadow-md shadow-white/10 rounded-lg bg-black p-4 w-[90vw] lg:max-w-sm relative mb-16">

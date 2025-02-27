@@ -37,7 +37,7 @@ import Link from "next/link";
 
 const ProfilePage = () => {
 
-  const { email, playerName, playerRank, playerExp, playerDayStreak, setPlayerExp, setPlayerDayStreak, workoutLogs, addWorkoutLog, logout } = usePlayer();
+  const { email, playerName, playerRank, playerExp, playerDayStreak, setPlayerExp, setPlayerDayStreak, workoutLogs, addWorkoutLog, logout, bannedPermanently } = usePlayer();
 
   const [workoutPushupCount, setWorkoutPushupCount] = useState(1);
   const [workoutSitupsCount, setWorkoutSitupsCount] = useState(1);
@@ -191,171 +191,185 @@ const ProfilePage = () => {
         <p className="absolute top-2 right-2 lg:right-[38%] tracking-wide text-xs font-semibold">{formatCurrentTime(timeNow)}</p>
         <p className="text-center pb-6 font-bold uppercase tracking-widest">Profile</p>
         <img src="./images/noob.png" alt="profile_pic" width={100} height={100} className="rounded-full h-[120px] w-[120px]"/>
-        <p className="font-semibold capitalize pt-2 pb-4">{playerName}</p>
-        {!playerRank && 
-        <div className="flex flex-col justify-center items-center tracking-widest gap-4 pt-20">
-          <p>Nothing to see here</p>
-          <p>Login to play the game</p>
-          <Link href={"/"}><Button className="bg-blue-700 hover:bg-blue-800 font-bold">Login</Button></Link>
-        </div>}
-        {playerRank && <div data-aos="fade-in" className="flex gap-3 justify-center items-center uppercase">
-          <div className="flex flex-col from-zinc-800 via-zinc-800 bg-gradient-to-b p-3 justify-center items-center drop-shadow-md rounded w-14 h-14 aspect-square">
-            <p className="font-bold tracking-widest text-[8px]">Exp</p>
-            <p className="text-sm font-semibold">{playerExp}</p>
-          </div>
-          <div className={`flex flex-col p-3 justify-center items-center drop-shadow-md rounded w-16 h-16 aspect-square bg-gradient-to-b
-            ${playerRank === "E" ? "from-red-600" : (playerRank === "D" ? "from-amber-600" : (playerRank === "C" ? "from-yellow-600" : (playerRank === "B" ? "from-blue-600" : (playerRank === "A" ? "from-green-600" : "from-purple-600" )))) }
-          `}>
-            <p className="font-bold tracking-widest text-[8px] -mt-1">Rank</p>
-            <p className={`text-2xl font-semibold -mt-0.5
-              `}>{playerRank}</p>
-          </div>
-          <div className="flex flex-col from-zinc-800 via-zinc-800 bg-gradient-to-b p-3 justify-center items-center drop-shadow-md rounded w-14 h-14 aspect-square">
-            <p className="font-bold tracking-widest text-[8px]">Streak</p>
-            <p className="text-sm font-semibold">{playerDayStreak}</p>
-          </div>
-        </div>}
-
-        {playerRank && <div data-aos="fade-in" className="flex flex-col gap-4 my-4 shadow-md shadow-white/10 rounded-lg bg-black p-4 w-[90vw] lg:max-w-sm relative">
-          <p className={`text-xl font-extrabold text-center tracking-wider uppercase bg-gradient-to-r bg-clip-text text-transparent ${todaysWorkoutComleted ? "from-green-800 via-green-500 to-green-800" : "from-red-800 via-red-500 to-red-800"}`}>
-            Today&apos;s Task
-          </p>
-          {todaysWorkoutComleted && <span className="bg-green-700 text-white text-[8px] font-bold mx-auto px-1 py-0.5 rounded absolute top-2 right-2 uppercase">Completed</span>}
-          <div className="flex justify-center gap-2">
-            {workoutRoutine.map((workout,key)=>(
-              <div key={key} className={goalWorkoutBoxCss}>
-                <p className={goalNumberCss}>{workout.count}</p>
-                <p className={goalTextCss}>{workout.type}</p>
-              </div>
-            ))}
-          </div>
-          <Button disabled={true}>
-            <p className={`${todaysWorkoutComleted && "line-through"}`}>{calculateTimeLeftTillEndOfDay(timeNow)}</p>
-            {!todaysWorkoutComleted && <FaHourglassStart className="text-white"/>}
-          </Button>
-          
-          {/* <Button onClick={handleSubmitTodaysWorkout} disabled={todaysWorkoutComleted} className={`${todaysWorkoutComleted ? "bg-zinc-700 hover:bg-zinc-600 text-white" : "bg-blue-700 hover:bg-blue-800"} font-bold`}>{todaysWorkoutComleted ? "Completed" : "Set as Complete"}</Button> */}
-          <Dialog>
-            <DialogTrigger asChild>
-              {/* <Button onClick={handlePlayMusic} className="w-full max-w-[200px] font-bold">Login</Button> */}
-              <Button disabled={todaysWorkoutComleted} className={`${todaysWorkoutComleted ? "bg-zinc-700 hover:bg-zinc-600 text-white" : "bg-blue-700 hover:bg-blue-800"} font-bold`}>{todaysWorkoutComleted ? "Completed" : "Set as Complete"}</Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-[90vw] lg:max-w-md rounded-lg bg-black text-white p-4">
-                <p className="font-bold text-center">{`Finished Today's Workout?`}</p>
-                <div className="grid grid-cols-2 gap-2">
-                  <DialogClose className={`bg-red-700 hover:bg-red-800 font-bold rounded-md`}><Button className={`bg-red-700 hover:bg-red-800 font-bold`}>No</Button></DialogClose>
-                  <DialogClose onClick={handleSubmitTodaysWorkout} className={`bg-blue-700 hover:bg-blue-800 font-bold rounded-md`}><Button className={`bg-blue-700 hover:bg-blue-800 font-bold`}>Yes</Button></DialogClose>
-                </div>
-                {/* <LoginUser isSignUp={false} /> */}
-            </DialogContent>
-          </Dialog>
-        </div>}
+        <p className={`font-semibold capitalize pt-2 pb-4 ${bannedPermanently && "text-red-700 line-through decoration-[3px]"}`}>{playerName}</p>
         
-        {playerRank && <div data-aos="fade-in" className="flex flex-col gap-4 my-4 shadow-md shadow-white/10 rounded-lg bg-black p-4 w-[90vw] lg:max-w-sm relative">
-          <p className={`text-xl font-extrabold text-center tracking-wider uppercase bg-gradient-to-r bg-clip-text text-transparent from-zinc-800 via-zinc-500 to-zinc-800`}>
-            Game Mechanics
-          </p>
-          
-          <Dialog>
-            <DialogTrigger asChild>
-              {/* <Button onClick={handlePlayMusic} className="w-full max-w-[200px] font-bold">Login</Button> */}
-              <Button className={`bg-zinc-700 hover:bg-zinc-600 text-white/70 font-bold`}>
-                {`How to Play?`}
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-[90vw] lg:max-w-md rounded-lg bg-black text-white p-4">
-                <p className="font-bold text-xl pt-4 pb-2 tracking-tight capitalize">{`The game mechanics is simple`}</p>
-                <div className='flex flex-col gap-3 tracking-widest text-sm'>
-                  <p className="">1&#41; Workout daily for 7 days <br/>to <span className='font-semibold bg-green-600 px-1.5'>rank up.</span></p>
-                  <p className="">2&#41; Workout <span className='font-semibold bg-blue-600 px-1.5'>task increases</span> as you rank higher up.</p>
-                  <p className="">3&#41; Miss/skip any workout and <br/>you will <span className='font-semibold bg-yellow-600 px-1.5'>rank down.</span></p>
-                  <p className="">4&#41; Miss &gt;3 days and your account <br/>will be <span className='font-semibold bg-red-600 px-1.5'>banned.</span></p>
-                  <p className="py-4">Note: Penalty system will start on <br/><span className='font-semibold bg-red-600 px-1.5'>10 March 2025</span></p>
-                </div>
-                <div className="grid gap-2">
-                  <DialogClose className={`bg-zinc-700 hover:bg-zinc-800 font-bold rounded-md`}><Button className={`bg-zinc-700 hover:bg-zinc-800 font-bold`}>Close</Button></DialogClose>
-                </div>
-            </DialogContent>
-          </Dialog>
-        </div>}
 
-        {playerRank && <div data-aos="fade-in" className="flex flex-col gap-4 my-4 shadow-md shadow-white/10 rounded-lg bg-black p-4 w-[90vw] lg:max-w-sm relative">
-          <p className={`text-xl font-extrabold text-center tracking-wider uppercase bg-gradient-to-r bg-clip-text text-transparent from-zinc-800 via-zinc-500 to-zinc-800`}>
-            App Development
-          </p>
+        {!bannedPermanently ? 
+        (<>
+        
+          {!playerRank && 
+          <div className="flex flex-col justify-center items-center tracking-widest gap-4 pt-20">
+            <p>Nothing to see here</p>
+            <p>Login to play the game</p>
+            <Link href={"/"}><Button className="bg-blue-700 hover:bg-blue-800 font-bold">Login</Button></Link>
+          </div>}
           
-          <Dialog>
-            <DialogTrigger asChild>
-              {/* <Button onClick={handlePlayMusic} className="w-full max-w-[200px] font-bold">Login</Button> */}
-              <Button className={`bg-gradient-to-tr from-yellow-700 via-yellow-400 to-yellow-700 hover:bg-yellow-800 text-white/100 text-shadow font-bold`} style={{ textShadow: '1px 1px 2px rgb(135, 106, 12)' }}>
-                {`Join the Movement`}
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-[90vw] lg:max-w-md rounded-lg bg-black text-white p-4">
-                <p className="font-bold text-xl pt-4 pb-2 tracking-tight capitalize">{`Building a game is costly`}</p>
-                <div className='flex flex-col gap-3 tracking-widest text-xs'>
-                  <p className="">1&#41; Because we need more <span className='font-semibold bg-green-600 px-1.5'>S-rank</span> real life people in real life. Tokyo meetup one fine day?</p>
-                  <p className="">2&#41; I code solo. And coding is <br/> <span className='font-semibold bg-blue-600 px-1.5'>super stressful</span> but I really want to make this work.</p>
-                  {/* <p className="">3&#41; Let's build an actual non toxic<br/><span className='font-semibold bg-yellow-600 px-1.5'>anime community</span></p> */}
-                  {/* <p className="">3&#41; I want to ultimately meet up with all the <span className='font-semibold bg-red-600 px-1.5'>S-rank</span> players IRL. Tokyo?</p> */}
-                  <p className="">3&#41; Lastly, lets be real, I need to pay bills, servers and development cost. I dont have much to begin with. This started as a joke but lets make it a real <span className='font-semibold bg-green-600 px-1.5'>W</span> for once. Im getting tired of always losing in life.</p>
-                  <p className="py-2 text-[10px]">Note: Thank you for the kind dms. I really didnt expect any traffic tbh. <br/>- <span className='font-semibold bg-red-600 px-1.5'>Solah, S-Rank Dev</span> </p>
-                  <p className="text-[10px] text-sky-400 leading-tight">{`* By purchasing the OG NFT, you will receive in-game benefits once the app is complete`}</p>
-                  <Link href="https://opensea.io/collection/our-solo-leveling/overview" className='w-full'><Button className='w-full bg-blue-700 hover:bg-blue-800 font-bold'>OpenSea NFT</Button></Link>
-                  <Link href="https://www.paypal.com/ncp/payment/L9WWND5R4YXA6" className='w-full'><Button className='w-full bg-blue-700 hover:bg-blue-800 font-bold'>Paypal</Button></Link>
-                </div>
-                <div className="grid gap-2">
-                  <DialogClose className={`bg-zinc-700 hover:bg-zinc-800 font-bold rounded-md`}><Button className={`bg-zinc-700 hover:bg-zinc-800 font-bold`}>Close</Button></DialogClose>
-                </div>
-            </DialogContent>
-          </Dialog>
-        </div>}
+          {playerRank && <div data-aos="fade-in" className="flex gap-3 justify-center items-center uppercase">
+            <div className="flex flex-col from-zinc-800 via-zinc-800 bg-gradient-to-b p-3 justify-center items-center drop-shadow-md rounded w-14 h-14 aspect-square">
+              <p className="font-bold tracking-widest text-[8px]">Exp</p>
+              <p className="text-sm font-semibold">{playerExp}</p>
+            </div>
+            <div className={`flex flex-col p-3 justify-center items-center drop-shadow-md rounded w-16 h-16 aspect-square bg-gradient-to-b
+              ${playerRank === "E" ? "from-red-600" : (playerRank === "D" ? "from-amber-600" : (playerRank === "C" ? "from-yellow-600" : (playerRank === "B" ? "from-blue-600" : (playerRank === "A" ? "from-green-600" : "from-purple-600" )))) }
+            `}>
+              <p className="font-bold tracking-widest text-[8px] -mt-1">Rank</p>
+              <p className={`text-2xl font-semibold -mt-0.5
+                `}>{playerRank}</p>
+            </div>
+            <div className="flex flex-col from-zinc-800 via-zinc-800 bg-gradient-to-b p-3 justify-center items-center drop-shadow-md rounded w-14 h-14 aspect-square">
+              <p className="font-bold tracking-widest text-[8px]">Streak</p>
+              <p className="text-sm font-semibold">{playerDayStreak}</p>
+            </div>
+          </div>}
 
-        {playerRank && <div data-aos="fade-in" className="flex flex-col gap-4 my-4 shadow-md shadow-white/10 rounded-lg bg-black p-4 w-[90vw] lg:max-w-sm relative mb-16">
-          <p className="font-bold text-center">Workout History</p>
-          <Table>
-            <TableCaption className="text-[10px] tracking-wider">A list of your all your accumulated hard work.</TableCaption>
-            <TableHeader>
-              <TableRow className="text-center text-xs text-start">
-                <TableHead className="px-2 h-8 text-white/90 font-semibold">Date</TableHead>
-                <TableHead className="px-2 h-8 text-white/90 font-semibold">Pushup</TableHead>
-                <TableHead className="px-2 h-8 text-white/90 font-semibold">Situps</TableHead>
-                <TableHead className="px-2 h-8 text-white/90 font-semibold">Squats</TableHead>
-                <TableHead className="px-2 h-8 text-white/90 font-semibold">Run</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {workoutLogs.map((workout) => (
-                <TableRow key={workout.id} className="text-xs text-white/50 tracking-wide" style={{ borderColor: "#FFFFFF30" }}>
-                  <TableCell className="font-medium p-2 h-10">
-                    {new Date(workout.date).toLocaleDateString(undefined, {
-                      day: '2-digit',
-                      month: '2-digit',
-                    })}
-                  </TableCell>
-                  <TableCell className="font-medium p-2 h-10">{workout.pushup}</TableCell>
-                  <TableCell className="font-medium p-2 h-10">{workout.situp}</TableCell>
-                  <TableCell className="font-medium p-2 h-10">{workout.squats}</TableCell>
-                  <TableCell className="font-medium p-2 h-10">{workout.run}</TableCell>
-                </TableRow>
+          {playerRank && <div data-aos="fade-in" className="flex flex-col gap-4 my-4 shadow-md shadow-white/10 rounded-lg bg-black p-4 w-[90vw] lg:max-w-sm relative">
+            <p className={`text-xl font-extrabold text-center tracking-wider uppercase bg-gradient-to-r bg-clip-text text-transparent ${todaysWorkoutComleted ? "from-green-800 via-green-500 to-green-800" : "from-red-800 via-red-500 to-red-800"}`}>
+              Today&apos;s Task
+            </p>
+            {todaysWorkoutComleted && <span className="bg-green-700 text-white text-[8px] font-bold mx-auto px-1 py-0.5 rounded absolute top-2 right-2 uppercase">Completed</span>}
+            <div className="flex justify-center gap-2">
+              {workoutRoutine.map((workout,key)=>(
+                <div key={key} className={goalWorkoutBoxCss}>
+                  <p className={goalNumberCss}>{workout.count}</p>
+                  <p className={goalTextCss}>{workout.type}</p>
+                </div>
               ))}
-            </TableBody>
-            <TableFooter style={{ borderColor: "#000000" }}>
-              <TableRow className="text-xs bg-black/[70%] tracking-wide">
-                <TableCell className="font-medium p-2 h-10 font-semibold" style={{ borderColor: "#FFFFFF30" }}>Total</TableCell>
-                <TableCell className="font-medium p-2 h-10 font-semibold">{workoutLogs.reduce((total, log) => total + log.pushup, 0)}<span className="text-[10px] font-bold ml-0.5 opacity-50">x</span></TableCell>
-                <TableCell className="font-medium p-2 h-10 font-semibold">{workoutLogs.reduce((total, log) => total + log.situp, 0)}<span className="text-[10px] font-bold ml-0.5 opacity-50">x</span></TableCell>
-                <TableCell className="font-medium p-2 h-10 font-semibold">{workoutLogs.reduce((total, log) => total + log.squats, 0)}<span className="text-[10px] font-bold ml-0.5 opacity-50">x</span></TableCell>
-                <TableCell className="font-medium p-2 h-10 font-semibold">{workoutLogs.reduce((total, log) => total + log.run, 0)}<span className="text-[10px] font-bold ml-0.5 opacity-50">km</span></TableCell>
-              </TableRow>
-            </TableFooter>
-          </Table>
-        </div>}
-        
+            </div>
+            <Button disabled={true}>
+              <p className={`${todaysWorkoutComleted && "line-through"}`}>{calculateTimeLeftTillEndOfDay(timeNow)}</p>
+              {!todaysWorkoutComleted && <FaHourglassStart className="text-white"/>}
+            </Button>
+            
+            {/* <Button onClick={handleSubmitTodaysWorkout} disabled={todaysWorkoutComleted} className={`${todaysWorkoutComleted ? "bg-zinc-700 hover:bg-zinc-600 text-white" : "bg-blue-700 hover:bg-blue-800"} font-bold`}>{todaysWorkoutComleted ? "Completed" : "Set as Complete"}</Button> */}
+            <Dialog>
+              <DialogTrigger asChild>
+                {/* <Button onClick={handlePlayMusic} className="w-full max-w-[200px] font-bold">Login</Button> */}
+                <Button disabled={todaysWorkoutComleted} className={`${todaysWorkoutComleted ? "bg-zinc-700 hover:bg-zinc-600 text-white" : "bg-blue-700 hover:bg-blue-800"} font-bold`}>{todaysWorkoutComleted ? "Completed" : "Set as Complete"}</Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-[90vw] lg:max-w-md rounded-lg bg-black text-white p-4">
+                  <p className="font-bold text-center">{`Finished Today's Workout?`}</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    <DialogClose className={`bg-red-700 hover:bg-red-800 font-bold rounded-md`}><Button className={`bg-red-700 hover:bg-red-800 font-bold`}>No</Button></DialogClose>
+                    <DialogClose onClick={handleSubmitTodaysWorkout} className={`bg-blue-700 hover:bg-blue-800 font-bold rounded-md`}><Button className={`bg-blue-700 hover:bg-blue-800 font-bold`}>Yes</Button></DialogClose>
+                  </div>
+                  {/* <LoginUser isSignUp={false} /> */}
+              </DialogContent>
+            </Dialog>
+          </div>}
+          
+          {playerRank && <div data-aos="fade-in" className="flex flex-col gap-4 my-4 shadow-md shadow-white/10 rounded-lg bg-black p-4 w-[90vw] lg:max-w-sm relative">
+            <p className={`text-xl font-extrabold text-center tracking-wider uppercase bg-gradient-to-r bg-clip-text text-transparent from-zinc-800 via-zinc-500 to-zinc-800`}>
+              Game Mechanics
+            </p>
+            
+            <Dialog>
+              <DialogTrigger asChild>
+                {/* <Button onClick={handlePlayMusic} className="w-full max-w-[200px] font-bold">Login</Button> */}
+                <Button className={`bg-zinc-700 hover:bg-zinc-600 text-white/70 font-bold`}>
+                  {`How to Play?`}
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-[90vw] lg:max-w-md rounded-lg bg-black text-white p-4">
+                  <p className="font-bold text-xl pt-4 pb-2 tracking-tight capitalize">{`The game mechanics is simple`}</p>
+                  <div className='flex flex-col gap-3 tracking-widest text-sm'>
+                    <p className="">1&#41; Workout daily for 7 days <br/>to <span className='font-semibold bg-green-600 px-1.5'>rank up.</span></p>
+                    <p className="">2&#41; Workout <span className='font-semibold bg-blue-600 px-1.5'>task increases</span> as you rank higher up.</p>
+                    <p className="">3&#41; Miss/skip any workout and <br/>you will <span className='font-semibold bg-yellow-600 px-1.5'>rank down.</span></p>
+                    <p className="">4&#41; Miss &gt;3 days and your account <br/>will be <span className='font-semibold bg-red-600 px-1.5'>banned.</span></p>
+                    <p className="py-4">Note: Penalty system will start on <br/><span className='font-semibold bg-red-600 px-1.5'>10 March 2025</span></p>
+                  </div>
+                  <div className="grid gap-2">
+                    <DialogClose className={`bg-zinc-700 hover:bg-zinc-800 font-bold rounded-md`}><Button className={`bg-zinc-700 hover:bg-zinc-800 font-bold`}>Close</Button></DialogClose>
+                  </div>
+              </DialogContent>
+            </Dialog>
+          </div>}
+
+          {playerRank && <div data-aos="fade-in" className="flex flex-col gap-4 my-4 shadow-md shadow-white/10 rounded-lg bg-black p-4 w-[90vw] lg:max-w-sm relative">
+            <p className={`text-xl font-extrabold text-center tracking-wider uppercase bg-gradient-to-r bg-clip-text text-transparent from-zinc-800 via-zinc-500 to-zinc-800`}>
+              App Development
+            </p>
+            
+            <Dialog>
+              <DialogTrigger asChild>
+                {/* <Button onClick={handlePlayMusic} className="w-full max-w-[200px] font-bold">Login</Button> */}
+                <Button className={`bg-gradient-to-tr from-yellow-700 via-yellow-400 to-yellow-700 hover:bg-yellow-800 text-white/100 text-shadow font-bold`} style={{ textShadow: '1px 1px 2px rgb(135, 106, 12)' }}>
+                  {`Join the Movement`}
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-[90vw] lg:max-w-md rounded-lg bg-black text-white p-4">
+                  <p className="font-bold text-xl pt-4 pb-2 tracking-tight capitalize">{`Building a game is costly`}</p>
+                  <div className='flex flex-col gap-3 tracking-widest text-xs'>
+                    <p className="">1&#41; Because we need more <span className='font-semibold bg-green-600 px-1.5'>S-rank</span> real life people in real life. Tokyo meetup one fine day?</p>
+                    <p className="">2&#41; I code solo. And coding is <br/> <span className='font-semibold bg-blue-600 px-1.5'>super stressful</span> but I really want to make this work.</p>
+                    {/* <p className="">3&#41; Let's build an actual non toxic<br/><span className='font-semibold bg-yellow-600 px-1.5'>anime community</span></p> */}
+                    {/* <p className="">3&#41; I want to ultimately meet up with all the <span className='font-semibold bg-red-600 px-1.5'>S-rank</span> players IRL. Tokyo?</p> */}
+                    <p className="">3&#41; Lastly, lets be real, I need to pay bills, servers and development cost. I dont have much to begin with. This started as a joke but lets make it a real <span className='font-semibold bg-green-600 px-1.5'>W</span> for once. Im getting tired of always losing in life.</p>
+                    <p className="py-2 text-[10px]">Note: Thank you for the kind dms. I really didnt expect any traffic tbh. <br/>- <span className='font-semibold bg-red-600 px-1.5'>Solah, S-Rank Dev</span> </p>
+                    <p className="text-[10px] text-sky-400 leading-tight">{`* By purchasing the OG NFT, you will receive in-game benefits once the app is complete`}</p>
+                    <Link href="https://opensea.io/collection/our-solo-leveling/overview" className='w-full'><Button className='w-full bg-blue-700 hover:bg-blue-800 font-bold'>OpenSea NFT</Button></Link>
+                    <Link href="https://www.paypal.com/ncp/payment/L9WWND5R4YXA6" className='w-full'><Button className='w-full bg-blue-700 hover:bg-blue-800 font-bold'>Paypal</Button></Link>
+                  </div>
+                  <div className="grid gap-2">
+                    <DialogClose className={`bg-zinc-700 hover:bg-zinc-800 font-bold rounded-md`}><Button className={`bg-zinc-700 hover:bg-zinc-800 font-bold`}>Close</Button></DialogClose>
+                  </div>
+              </DialogContent>
+            </Dialog>
+          </div>}
+
+          {playerRank && <div data-aos="fade-in" className="flex flex-col gap-4 my-4 shadow-md shadow-white/10 rounded-lg bg-black p-4 w-[90vw] lg:max-w-sm relative mb-16">
+            <p className="font-bold text-center">Workout History</p>
+            <Table>
+              <TableCaption className="text-[10px] tracking-wider">A list of your all your accumulated hard work.</TableCaption>
+              <TableHeader>
+                <TableRow className="text-center text-xs text-start">
+                  <TableHead className="px-2 h-8 text-white/90 font-semibold">Date</TableHead>
+                  <TableHead className="px-2 h-8 text-white/90 font-semibold">Pushup</TableHead>
+                  <TableHead className="px-2 h-8 text-white/90 font-semibold">Situps</TableHead>
+                  <TableHead className="px-2 h-8 text-white/90 font-semibold">Squats</TableHead>
+                  <TableHead className="px-2 h-8 text-white/90 font-semibold">Run</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {workoutLogs.map((workout) => (
+                  <TableRow key={workout.id} className="text-xs text-white/50 tracking-wide" style={{ borderColor: "#FFFFFF30" }}>
+                    <TableCell className="font-medium p-2 h-10">
+                      {new Date(workout.date).toLocaleDateString(undefined, {
+                        day: '2-digit',
+                        month: '2-digit',
+                      })}
+                    </TableCell>
+                    <TableCell className="font-medium p-2 h-10">{workout.pushup}</TableCell>
+                    <TableCell className="font-medium p-2 h-10">{workout.situp}</TableCell>
+                    <TableCell className="font-medium p-2 h-10">{workout.squats}</TableCell>
+                    <TableCell className="font-medium p-2 h-10">{workout.run}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+              <TableFooter style={{ borderColor: "#000000" }}>
+                <TableRow className="text-xs bg-black/[70%] tracking-wide">
+                  <TableCell className="font-medium p-2 h-10 font-semibold" style={{ borderColor: "#FFFFFF30" }}>Total</TableCell>
+                  <TableCell className="font-medium p-2 h-10 font-semibold">{workoutLogs.reduce((total, log) => total + log.pushup, 0)}<span className="text-[10px] font-bold ml-0.5 opacity-50">x</span></TableCell>
+                  <TableCell className="font-medium p-2 h-10 font-semibold">{workoutLogs.reduce((total, log) => total + log.situp, 0)}<span className="text-[10px] font-bold ml-0.5 opacity-50">x</span></TableCell>
+                  <TableCell className="font-medium p-2 h-10 font-semibold">{workoutLogs.reduce((total, log) => total + log.squats, 0)}<span className="text-[10px] font-bold ml-0.5 opacity-50">x</span></TableCell>
+                  <TableCell className="font-medium p-2 h-10 font-semibold">{workoutLogs.reduce((total, log) => total + log.run, 0)}<span className="text-[10px] font-bold ml-0.5 opacity-50">km</span></TableCell>
+                </TableRow>
+              </TableFooter>
+            </Table>
+          </div>}
+
+        </>
+        ) : (
+          <div className="mt-8 flex flex-col gap-4 rounded-lg p-12 bg-gradient-to-b from-red-600">
+            <p className="font-bold text-4xl text-center">GAME OVER</p>
+            <span className="font-bold text-xs text-center tracking-widest">There are no redos in life.<br/> You have been eliminated by the system.</span>
+          </div>
+        )}
 
         <MenuNavigation />
 
-      </div>
+      </div> 
+
 
     </div>
   );

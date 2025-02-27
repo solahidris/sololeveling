@@ -28,6 +28,8 @@ export interface PlayerContextType {
   workoutLogs: WorkoutLog[];
   setWorkoutLogs: (logs: WorkoutLog[]) => void;
   addWorkoutLog: (log: WorkoutLog) => void;
+  bannedPermanently: boolean;
+  setBannedPermanently: (banned: boolean) => void;
   logout: () => void;
 }
 
@@ -42,6 +44,7 @@ export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) 
   const [workoutLogs, setWorkoutLogs] = useState<WorkoutLog[]>([]);
   const [playerExp, setPlayerExp] = useState(0);
   const [playerDayStreak, setPlayerDayStreak] = useState(0);
+  const [bannedPermanently, setBannedPermanently] = useState(false);
   const [email, setEmail] = useState("");
 
   const addWorkoutLog = (log: WorkoutLog) => {
@@ -66,6 +69,7 @@ export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) 
             setPlayerDayStreak(userData.playerDayStreak);
             setPlayerCreated(formatTimestampToDate(userData.created_at));
             setEmail(userData.email);
+            setBannedPermanently(userData.bannedPermanently);
              // Ensure workoutLogs are set
             setWorkoutLogs(userData.workoutLogs || []);
           } else {
@@ -84,6 +88,7 @@ export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     setPlayerExp(0);
     setPlayerDayStreak(0);
     setPlayerCreated('');
+    setBannedPermanently(false);
     setEmail('');
   };
 
@@ -102,6 +107,8 @@ export const PlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) 
       setPlayerDayStreak,
       playerCreated,
       setPlayerCreated,
+      bannedPermanently,
+      setBannedPermanently,
       email,
       setEmail,
       logout
