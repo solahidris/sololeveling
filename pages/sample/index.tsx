@@ -58,14 +58,30 @@ const SamplePage = () => {
       />
 
         {/* Ad Placement Example */}
-        {/* <div id="ezoic-pub-ad-placeholder-101"></div>
+        <div id="ezoic-pub-ad-placeholder-101"></div>
         <script>
           {`
             ezstandalone.cmd.push(function() {
               ezstandalone.showAds(101);
             });
           `}
-        </script> */}
+        </script>
+        <div id="ezoic-pub-ad-placeholder-102"></div>
+        <script>
+          {`
+            ezstandalone.cmd.push(function() {
+              ezstandalone.showAds(102);
+            });
+          `}
+        </script>
+        <div id="ezoic-pub-ad-placeholder-103"></div>
+        <script>
+          {`
+            ezstandalone.cmd.push(function() {
+              ezstandalone.showAds(103);
+            });
+          `}
+        </script>
 
         <Dialog>
           <DialogTrigger asChild>
