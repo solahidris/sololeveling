@@ -13,9 +13,26 @@ export default function Document() {
         <meta property="og:url" content="https://www.oursololeveling.com/" />
         <meta property="og:type" content="website" />
         <meta property="og:image" content="https://www.oursololeveling.com/images/main_new.png" />
+
+        {/* <!-- Ezoic Privacy Scripts --> */}
+        <script async src="https://the.gatekeeperconsent.com/cmp.min.js" data-cfasync="false"></script>
+        <script async src="https://the.gatekeeperconsent.com/ccpa/v2/standalone.js"></script>
+        {/* <!-- End Ezoic Privacy Scripts --> */}
+        
+        {/* <!-- Ezoic Header Script --> */}
+        <script async src="//www.ezojs.com/ezoic/sa.min.js"></script>
+        <script>
+          {`
+            window.ezstandalone = window.ezstandalone || {};
+            ezstandalone.cmd = ezstandalone.cmd || [];
+          `}
+        </script>
+        {/* <!-- End Ezoic Header Script --> */}
+
         {/* <!-- Cloudflare Web Analytics --> */}
         <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "9fa6a3af8cd04548854f5491b219f08c"}'></script>
         {/* <!-- End Cloudflare Web Analytics --> */}
+
       </Head>
       <body className="antialiased bg-black">
         <Main />

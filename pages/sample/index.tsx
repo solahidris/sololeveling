@@ -16,7 +16,7 @@ import { usePlayer } from "@/context/PlayerContext";
 import LoginUser from "@/components/LoginUser";
 
 
-const Home = () => {
+const SamplePage = () => {
 
   const [playMusic, setPlayMusic] = useState(false);
   const [playGame, setPlayGame] = useState<boolean | null>(null); // Initialize as null, can be boolean later
@@ -58,14 +58,14 @@ const Home = () => {
       />
 
         {/* Ad Placement Example */}
-        {/* <div id="ezoic-pub-ad-placeholder-101"></div>
+        <div id="ezoic-pub-ad-placeholder-101"></div>
         <script>
           {`
             ezstandalone.cmd.push(function() {
               ezstandalone.showAds(101);
             });
           `}
-        </script> */}
+        </script>
 
         <Dialog>
           <DialogTrigger asChild>
@@ -156,4 +156,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default SamplePage;
