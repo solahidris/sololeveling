@@ -22,7 +22,8 @@ import MenuNavigation from "@/components/MenuNavigation";
 // Define a type for the user data
 interface User {
   playerName: string;
-  playerRank: string;
+  // playerRank: string;
+  playerRank: 'S' | 'A' | 'B' | 'C' | 'D' | 'E'; // Specify possible values
   playerExp: number;
 }
 
@@ -61,9 +62,15 @@ const RankingPage = () => {
       if (error) {
         console.error('Error fetching users:', error);
       } else {
-        setAllUsers(data || []);
-        // console.log(data);
+        // Custom sort logic for playerRank
+        const rankOrder = { 'S': 1, 'A': 2, 'B': 3, 'C': 4, 'D': 5, 'E': 6 };
+        const sortedData = (data || []).sort((a, b) => {
+          return rankOrder[a.playerRank as keyof typeof rankOrder] - rankOrder[b.playerRank as keyof typeof rankOrder];
+        });
+
+        setAllUsers(sortedData);
         setTotalPlayersInGame(count || 0);
+        // console.log(data);
         // console.log('Total number of users:', count);
         
         // Find the current player's global rank

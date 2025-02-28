@@ -37,7 +37,8 @@ import MenuNavigation from "@/components/MenuNavigation";
 import Link from "next/link";
 
 import MusicIcons from '@/components/MusicIcons';
- 
+import confetti from 'canvas-confetti';
+
 
 const ProfilePage = () => {
 
@@ -201,7 +202,7 @@ const ProfilePage = () => {
     const streak = calculateDayStreak(updatedWorkoutLogs);
     setPlayerDayStreak(streak);
   
-    console.log("Updating Supabase with newExp:", newExp, "and updatedWorkoutLogs:", updatedWorkoutLogs);
+    // console.log("Updating Supabase with newExp:", newExp, "and updatedWorkoutLogs:", updatedWorkoutLogs);
   
     try {
       const { error } = await supabase
@@ -215,12 +216,23 @@ const ProfilePage = () => {
   
       if (error) throw error;
   
-      console.log('User data updated successfully in Supabase');
+      // console.log('User data updated successfully in Supabase');
+
+      // Trigger confetti when the workout is successfully logged
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        // origin: { y: 1 }
+        origin: { y: 0.6 }
+      });
+
     } catch (error) {
       if (error instanceof Error) {
         console.error('Error updating user data:', error.message);
+        window.alert(`Error updating user data: ${error.message}`);
       } else {
         console.error('An unknown error occurred:', error);
+        window.alert('An unknown error occurred:');
       }
     }
   };
