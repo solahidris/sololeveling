@@ -105,7 +105,7 @@ const RankingPage = () => {
       {/* Background Overlay Dark Screen */}
       <div className="h-full w-full bg-black/80 absolute top-0 left-0 z-0"/>
       {/* Logout Buttton */}
-      <button onClick={playerRank ? handleLogOut : handleLogin} className={`absolute top-4 left-4 lg:left-[38%] z-10 bg-white/10z-10 text-xs tracking-wider font-semibold ${playerRank ? "text-red-600" : "text-blue-600"}`}>{playerRank ? "Logout" : "Login"}</button>
+      <button onClick={playerRank ? handleLogOut : handleLogin} className={`absolute top-4 left-4 lg:left-[38%] z-10 text-xs tracking-wider font-semibold ${playerRank ? "text-red-600" : "text-blue-600"}`}>{playerRank ? "Logout" : "Login"}</button>
 
       <div className="z-10 text-white flex flex-col items-center">
         <p className="absolute top-4 right-4 lg:right-[38%] tracking-wide text-xs font-semibold">{formatCurrentTime(timeNow)}</p>

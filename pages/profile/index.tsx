@@ -220,10 +220,9 @@ const ProfilePage = () => {
 
       // Trigger confetti when the workout is successfully logged
       confetti({
-        particleCount: 100,
-        spread: 70,
-        // origin: { y: 1 }
-        origin: { y: 0.6 }
+        particleCount: 1000,
+        spread: 700,
+        origin: { y: 1 }
       });
 
     } catch (error) {
