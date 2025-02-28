@@ -15,10 +15,13 @@ import { useEffect, useState } from "react";
 import { usePlayer } from "@/context/PlayerContext";
 import LoginUser from "@/components/LoginUser";
 
+import MusicIcons from "@/components/MusicIcons";
+import { useMusic } from "@/context/MusicContext";
+
 
 const Home = () => {
-
-  const [playMusic, setPlayMusic] = useState(false);
+  
+  const { playMusic, handlePlayMusic } = useMusic();
   const [playGame, setPlayGame] = useState<boolean | null>(null); // Initialize as null, can be boolean later
   const { playerName, setPlayerName } = usePlayer(); // Use the context
   const { playerRank, setPlayerRank } = usePlayer(); // Use the context
@@ -26,17 +29,6 @@ const Home = () => {
   const [playerInitialKM, setPlayerInitialKM] = useState(0);
   const [seePlayerIntroDashboard, setSeePlayerIntroDashboard] = useState(false);
   const [seePlayerSignUp, setSeePlayerSignUp] = useState(false);
-
-  const handlePlayMusic = () => {
-    if (playMusic) {
-      console.log("music already played");
-    } else {
-      setPlayMusic(true);
-      console.log("set play music true:: ", !playMusic);
-      const audio = new Audio("./audio/dark_aria.mp3");
-      audio.play();
-    }
-  }
 
   useEffect(() => {
     if (playerInitialKM < 8) {
@@ -49,6 +41,10 @@ const Home = () => {
 
   return (
     <div className="flex flex-col justify-center items-center min-h-[100vh] bg-gradient-to-tr from-gray-800 via-gray-500 to-gray-800 bg-opacity-[10%]">
+
+      {/* Music Button Mute and Loop */}
+      <MusicIcons />
+      
       <img
         src="./images/main_new.png"
         alt="mainimage"
@@ -69,7 +65,7 @@ const Home = () => {
 
         <Dialog>
           <DialogTrigger asChild>
-            <Button onClick={handlePlayMusic} className="w-full max-w-[200px] mt-4 font-bold">Start New Quest</Button>
+            <Button onClick={() => {if (!playMusic) {handlePlayMusic()}}} className="w-full max-w-[200px] mt-4 font-bold">Start New Quest</Button>
           </DialogTrigger>
           <DialogContent className="max-w-[90vw] lg:max-w-md rounded-lg bg-black text-white p-4">
             <DialogHeader>
@@ -145,7 +141,7 @@ const Home = () => {
           <p className="text-white/70 font-semibold text-xs tracking-widest py-1.5">or</p>
         <Dialog>
           <DialogTrigger asChild>
-            <Button onClick={handlePlayMusic} className="w-full max-w-[200px] font-bold">Login</Button>
+            <Button onClick={() => {if (!playMusic) {handlePlayMusic()}}} className="w-full max-w-[200px] font-bold">Login</Button>
           </DialogTrigger>
           <DialogContent className="max-w-[90vw] lg:max-w-md rounded-lg bg-black text-white p-4">
               <LoginUser isSignUp={false} />

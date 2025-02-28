@@ -64,14 +64,7 @@ const RankingPage = () => {
         setAllUsers(data || []);
         // console.log(data);
         setTotalPlayersInGame(count || 0);
-        console.log('Total number of users:', count);
-        
-        // // Find the current player's rank
-        // // I NEED TO REPLACE THIS SINCE IT DONT WORK. IT NEEDS TO FIND WITHIN THE DB NOT THE limit 30
-        // const currentPlayerIndex = data?.findIndex(user => user.playerName === playerName);
-        // if (currentPlayerIndex !== undefined && currentPlayerIndex !== -1) {
-        //   setPlayerGlobalRank(currentPlayerIndex + 1); // Rank is index + 1
-        // }
+        // console.log('Total number of users:', count);
         
         // Find the current player's global rank
         const { count: higherExpCount, error: rankError } = await supabase
@@ -106,7 +99,6 @@ const RankingPage = () => {
       <div className="h-full w-full bg-black/80 absolute top-0 left-0 z-0"/>
       {/* Logout Buttton */}
       <button onClick={playerRank ? handleLogOut : handleLogin} className={`absolute top-2 left-2 lg:left-[38%] z-10 bg-white/10z-10 text-xs tracking-wider font-semibold ${playerRank ? "text-red-600" : "text-blue-600"}`}>{playerRank ? "Logout" : "Login"}</button>
-
 
       <div className="z-10 text-white flex flex-col items-center">
         <p className="absolute top-2 right-2 lg:right-[38%] tracking-wide text-xs font-semibold">{formatCurrentTime(timeNow)}</p>

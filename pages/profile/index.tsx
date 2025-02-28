@@ -35,6 +35,8 @@ import {
 import { useRouter } from "next/router";
 import MenuNavigation from "@/components/MenuNavigation";
 import Link from "next/link";
+
+import MusicIcons from '@/components/MusicIcons';
  
 
 const ProfilePage = () => {
@@ -249,7 +251,8 @@ const ProfilePage = () => {
       <div className="h-full w-full bg-black/80 absolute top-0 left-0 z-0"/>
       {/* Logout / Login Buttton */}
       <button onClick={playerRank ? handleLogOut : handleLogin} className={`absolute top-2 left-2 lg:left-[38%] z-10 bg-white/10z-10 text-xs tracking-wider font-semibold ${playerRank ? "text-red-600" : "text-blue-600"}`}>{playerRank ? "Logout" : "Login"}</button>
-
+      <MusicIcons />
+      
 
       <div className="z-10 text-white flex flex-col items-center">
         <p className="absolute top-2 right-2 lg:right-[38%] tracking-wide text-xs font-semibold">{formatCurrentTime(timeNow)}</p>
